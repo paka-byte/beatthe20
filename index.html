@@ -244,6 +244,9 @@ const NEED_PER_LEVEL = 2;            // ทุกด่านต้องยิ�
 const needFor = lv => (S.mode==='hc' ? 1 : NEED_PER_LEVEL);
 // เวอร์ชันกติกา: เปลี่ยนเมื่อปรับกติกา → leaderboard เริ่มกระดานใหม่ และหน้าเว็บเก่าส่งคะแนนไม่ได้
 const RULES_VERSION = 'r2';
+// โฆษณาแบบดูแล้วได้รางวัล (Google H5 Games Ads) — ใส่รหัส AdSense เมื่อได้รับอนุมัติ เช่น 'ca-pub-1234567890123456'
+const ADSENSE_CLIENT = '';
+const ADS_TEST_MODE = true;          // เปิดโหมดทดสอบของ Google ไว้ก่อน (ปิดเมื่อพร้อมใช้จริง)
 const CONTINUES = 1;                 // ชีวิตพิเศษต่อเกม
 const START_ITEMS = { cheer:1, boots:1, var:1 };   // ตัวช่วยตอนเริ่มเกม
 const BOOTS_MULT = 1.5;              // 👟 รองเท้าทองคำ: กรอบที่นับว่าเข้าใหญ่ขึ้น 50%
@@ -980,7 +983,10 @@ function levelSummary(pass, goals){
     </div>`);
   const next = ()=>{ closeModal(); S.level++; S.attempt = 0; showLevelIntro(); };
   if($('mSpin')) $('mSpin').onclick = ()=> spinWheel(next);
-  if($('mCont')) $('mCont').onclick = ()=>{ closeModal(); S.continues--; S.attempt++; showLevelIntro(); };
+  if($('mCont')) $('mCont').onclick = ()=>{
+    const go = ()=>{ closeModal(); S.continues--; S.attempt++; showLevelIntro(); };
+    showRewardedAd('แก้ตัว ยิงด่านนี้ใหม่', go);
+  };
   if($('mGo')) $('mGo').onclick = ()=>{
     if(pass && !last) return next();
     closeModal(); gameOver(pass && last);
@@ -1327,6 +1333,40 @@ function goHome(showLb){
 function modal(html){ $('modalCard').innerHTML = html; $('modal').classList.remove('hidden'); }
 function closeModal(){ $('modal').classList.add('hidden'); }
 
+/* ===== โฆษณาแบบดูแล้วได้รางวัล ===== */
+function initAds(){
+  if(!ADSENSE_CLIENT || !/^https?:/.test(location.protocol)) return;
+  const sc = document.createElement('script');
+  sc.async = true; sc.crossOrigin = 'anonymous';
+  sc.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
+  sc.setAttribute('data-ad-client', ADSENSE_CLIENT);
+  if(ADS_TEST_MODE) sc.setAttribute('data-adbreak-test', 'on');
+  sc.setAttribute('data-ad-frequency-hint', '30s');
+  document.head.appendChild(sc);
+  window.adsbygoogle = window.adsbygoogle || [];
+  window.adBreak = window.adConfig = function(o){ window.adsbygoogle.push(o); };
+  adConfig({ preloadAdBreaks: 'on', sound: muted ? 'off' : 'on' });
+}
+// เรียกตอนผู้เล่นกดขอรางวัล: มีโฆษณา → ให้ดูก่อนแล้วได้รางวัล · ไม่มีโฆษณา (ยังไม่ได้อนุมัติ/บล็อก) → ให้รางวัลเลย
+function showRewardedAd(label, onReward){
+  if(!ADSENSE_CLIENT || typeof window.adBreak !== 'function'){ onReward(); return; }
+  let done = false; const finish = (give)=>{ if(done) return; done = true; crowd(true); if(give) onReward(); };
+  crowd(false);
+  adBreak({
+    type: 'reward', name: 'continue-level',
+    beforeReward: (showAdFn)=>{
+      modal(`<span class="reveal-tag">📺 ดูโฆษณาเพื่อแก้ตัว</span>
+        <div class="meta" style="margin-top:12px">ดูโฆษณาสั้น ๆ จนจบ แล้วได้ <b>${label}</b></div>
+        <div class="btnrow"><button class="btn red" id="adYes">▶ ดูโฆษณา</button><button class="btn ghost" id="adNo">ไม่ดู</button></div>`);
+      $('adYes').onclick = ()=>{ closeModal(); showAdFn(); };
+      $('adNo').onclick = ()=>{ closeModal(); finish(false); levelSummary(false, S.shots.filter(Boolean).length); };
+    },
+    adDismissed: ()=>{ finish(false); levelSummary(false, S.shots.filter(Boolean).length); },
+    adViewed: ()=> finish(true),
+    adBreakDone: (info)=>{ if(!done && info && info.breakStatus !== 'viewed' && info.breakStatus !== 'dismissed') finish(true); },
+  });
+}
+
 /* ===== เช็กเวอร์ชันใหม่ ===== */
 function showUpdateBar(){
   if($('updBar')) return;
@@ -1351,7 +1391,7 @@ document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkVe
   $('btnMute').onclick = ()=>{ muted=!muted; lsSet('bt20_muted',muted); $('btnMute').textContent = muted?'🔇':'🔊'; crowd(!muted); };
   initSfx();
   await loadData();
-  renderLadder(); refreshDailyBtn(); checkVersion();
+  renderLadder(); refreshDailyBtn(); checkVersion(); initAds();
   $('btnStart').onclick = ()=>startRun('normal');
   $('btnHc').onclick = ()=>startRun('hc');
   document.addEventListener('keydown', e=>{ if(e.key==='Enter' && !$('screenStart').classList.contains('hidden')) startRun(); });
