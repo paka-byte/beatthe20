@@ -413,7 +413,9 @@ const svg = $('scene');
 const HC = () => S.mode === 'hc';
 
 function startRun(mode='normal'){
+  S.nameGiven = !!$('nameInput').value.trim();
   S.name = ($('nameInput').value.trim() || 'ไม่ประสงค์ออกนาม').slice(0,16);
+  S.helpShown = false;
   lsSet('bt20_name', S.name);
   S.mode = mode; S.daily = todayBKK();
   S.level = 0; S.score = 0; S.totalGoals = 0; S.extraShots = 0; S.levelExtra = 0; S.continues = CONTINUES; S.attempt = 0; S.history = []; S.scored = [];
@@ -435,7 +437,7 @@ function startHc(){
     <div class="meta">เกมจะสุ่มลูกที่เคยเข้าจริงจากโกลทั้ง ${ORDER.length} คนมาทีละลูก<br>บอกทีม เท้า จังหวะ ระยะ และ xG ให้ครบ แต่ต้องยิงให้ตรงลูกนั้น</div>
     <div class="meta">แต่ละลูกยิงได้ <b>${HC_TRIES} ครั้ง</b> · ไม่เข้าเลยคือจบเกม<br>เข้าภายใน <b>${HC_SPIN_WITHIN} ครั้งแรก</b> ได้หมุนวงล้อ 🎡 · ทุกครั้งที่พลาด เกมจะบอกทางว่าต้องขยับไปทางไหน</div>
     <button class="btn red" id="mGo">ลุย!</button>`);
-  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); };
+  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); showHelp(); };
 }
 function hcNext(first){
   if(!S.hcQueue.length) S.hcQueue = shuffle(ORDER.flatMap((k,ki)=>k.goals.map((_,gi)=>[ki,gi])));
@@ -476,7 +478,7 @@ function showLevelIntro(){
     <div class="meta">${`มี ${shotsFor()} ลูก${S.levelExtra?` (รวม ⚽ ลูกพิเศษ +${S.levelExtra})`:''}`} · ต้องเข้าอย่างน้อย <b>${need}</b> ลูก<br>ยิงเข้า 3 ลูกขึ้นไป ได้หมุนวงล้อ 🎡</div>
     <button class="btn red" id="mGo">ลุย!</button>`);
   setPhoto($('mImg'), k.keeper.code);
-  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); if(!lsGet('bt20_help_seen',false)) showHelp(); };
+  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); if(S.level===0 && !S.attempt && !S.helpShown){ S.helpShown = true; showHelp(); } };
 }
 
 function remaining(){ return [...S.pool].filter(i=>!S.found.has(i) && !S.burned.has(i)); }
@@ -1042,13 +1044,20 @@ async function gameOver(won){
   const reached = HC() ? 1 : (won ? ORDER.length : S.level+1);
   const likes = likeSummary(); const top = likes[0];
   const stopper = won ? null : K();
-  const entry = { name:S.name, score:S.score, level:reached, goals:S.totalGoals, season: DATA.season||'', daily:S.daily, like: top?top.name:'', mode:S.mode };
+  const askName = !S.nameGiven;
+  const summary = () => `${esc(S.name)} · ${HC()?`💀 Hardcore · ยิงเข้า ${S.totalGoals} ลูก`:`ผ่าน ${S.history.filter(h=>h.pass).length} นายด่าน · ยิงเข้า ${S.totalGoals} ลูก`}`;
   modal(`
     <span class="reveal-tag">${won?'🏆 BEAT THE 20!':'GAME OVER'}</span>
     <h2 style="margin-top:12px;font-size:40px">${S.score.toLocaleString()}</h2>
-    <div class="meta">${esc(S.name)} · ${HC()?`💀 Hardcore · ยิงเข้า ${S.totalGoals} ลูก`:`ผ่าน ${S.history.filter(h=>h.pass).length} นายด่าน · ยิงเข้า ${S.totalGoals} ลูก`}</div>
+    <div class="meta" id="mSum">${summary()}</div>
     ${top?`<div class="meta">สไตล์การยิงของคุณ: <b>${esc(top.name)}</b> (ยิงเหมือน ${top.n} ลูก)</div>`:''}
-    <div class="meta" id="mStatus">กำลังบันทึกลง leaderboard…</div>
+    ${askName ? `<div id="nameBox" style="margin:4px 0 12px">
+        <div class="meta" style="margin:0 0 6px">ใส่ชื่อเพื่อขึ้น leaderboard</div>
+        <div class="btnrow"><input id="goName" maxlength="16" placeholder="ชื่อของคุณ" style="font-family:inherit;font-size:17px;border:3px solid var(--ink);border-radius:12px;padding:8px 12px;width:180px">
+        <button class="btn red" id="goSave">บันทึก</button></div>
+        <button class="btn sm ghost" id="goSkip" style="margin-top:8px">ไม่ใส่ชื่อ</button>
+      </div>` : ''}
+    <div class="meta" id="mStatus">${askName ? '' : 'กำลังบันทึกลง leaderboard…'}</div>
     <img id="sharePreview" class="share-preview hidden" alt="การ์ดผลการเล่น">
     <div class="btnrow">
       <button class="btn red" id="mShare">📤 แชร์ผล</button>
@@ -1058,9 +1067,27 @@ async function gameOver(won){
   $('mAgain').onclick = ()=>{ closeModal(); startRun(S.mode); };
   $('mHome').onclick = ()=>{ closeModal(); goHome(true); };
   $('mShare').onclick = ()=> shareResult(won, reached, stopper, likes);
-  makeCard(won, reached, stopper, likes).then(c=>{ if(c){ try{ $('sharePreview').src = c.toDataURL('image/png'); $('sharePreview').classList.remove('hidden'); }catch(e){} } });
-  const ok = await lbSubmit(entry);
-  const st = $('mStatus'); if(st) st.textContent = ok ? 'บันทึกลง leaderboard แล้ว ✅' : (SAMPLE_MODE?'โหมดตัวอย่าง: บันทึกไว้ในเครื่องนี้':'บันทึกไว้ในเครื่องนี้ (leaderboard ออนไลน์ยังไม่พร้อม)');
+  const preview = () => makeCard(won, reached, stopper, likes).then(c=>{ if(c){ try{ $('sharePreview').src = c.toDataURL('image/png'); $('sharePreview').classList.remove('hidden'); }catch(e){} } });
+  preview();
+  let saved = false;
+  const save = async ()=>{
+    if(saved) return; saved = true;
+    const entry = { name:S.name, score:S.score, level:reached, goals:S.totalGoals, season: DATA.season||'', daily:S.daily, like: top?top.name:'', mode:S.mode };
+    const st0 = $('mStatus'); if(st0) st0.textContent = 'กำลังบันทึกลง leaderboard…';
+    const ok = await lbSubmit(entry);
+    const st = $('mStatus'); if(st) st.textContent = ok ? 'บันทึกลง leaderboard แล้ว ✅' : (SAMPLE_MODE?'โหมดตัวอย่าง: บันทึกไว้ในเครื่องนี้':'บันทึกไว้ในเครื่องนี้ (leaderboard ออนไลน์ยังไม่พร้อม)');
+  };
+  if(!askName) return save();
+  const commitName = (name)=>{
+    if(name){ S.name = name.slice(0,16); S.nameGiven = true; lsSet('bt20_name', S.name); $('nameInput').value = S.name; }
+    $('nameBox').remove(); $('mSum').innerHTML = summary(); preview(); save();
+  };
+  $('goName').focus();
+  $('goSave').onclick = ()=> commitName($('goName').value.trim());
+  $('goName').onkeydown = e=>{ if(e.key==='Enter') commitName($('goName').value.trim()); };
+  $('goSkip').onclick = ()=> commitName('');
+  // ถ้ากดแชร์/เล่นใหม่/หน้าแรก โดยยังไม่บันทึก ให้บันทึกแบบไม่ใส่ชื่อ
+  for(const id of ['mShare','mAgain','mHome']){ const b=$(id), f=b.onclick; b.onclick = ()=>{ if(!saved){ const n=$('goName')?.value.trim(); commitName(n||''); } f(); }; }
 }
 
 /* ================= SHARE CARD (1080×1350) ================= */
