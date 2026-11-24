@@ -157,7 +157,7 @@ table.lb td.n{text-align:right;font-weight:800}
     </div>
     <div class="card rules">
       <b>กติกา</b> · โกลเรียงจากคนที่เสียเยอะสุดไปหาคนที่เสียน้อยสุด ด่าน 20 คือบอส · ด่านละ <b>5 ลูก</b> · แก้ตัวยิงด่านเดิมใหม่ได้ <b>1 ครั้ง</b><br>
-      <b>โหมดปกติ</b> · เลือกจุดยิง แล้วจิ้มมุมในกรอบ ตรงกับมุมที่โกลเคยเสียจากจุดนั้นจริงคือ <b>เข้า</b> · ด่าน 1–15 ต้องเข้า 2 ลูก โซนบอส 16–20 ต้องเข้า 1 ลูก<br>
+      <b>โหมดปกติ</b> · เลือกจุดยิง แล้วจิ้มมุมในกรอบ ตรงกับมุมที่โกลเคยเสียจากจุดนั้นจริงคือ <b>เข้า</b> · ทุกด่านต้องเข้า <b>2 ลูก</b><br>
       <b>💀 Hardcore</b> · ยิงไม่รู้จบ สุ่มลูกจริงจากโกลทั้ง 20 คน บอกคนยิง ทีม เท้า จังหวะ ระยะ xG ครบ · แต่ละลูกยิงได้ 5 ครั้ง (พลาดแล้วเกมบอกทาง) ไม่เข้าคือจบ · เข้าภายใน 2 ครั้งได้หมุนวงล้อ<br>
       <b>ตัวช่วย</b> · 📣 กองเชียร์หลังประตู บอกว่าลูกไปทางซ้าย กลาง หรือขวา · 👟 รองเท้าทองคำ กรอบที่นับว่าเข้าใหญ่ขึ้น 50% หนึ่งลูก · 📺 VAR รีเพลย์ ย้ายไปยืนจุดยิงจริง แล้วเปิดจอให้ดูทิศลูกแบบช้า ๆ (ภาพตัดก่อนถึงประตู)<br>
       ยิงเข้า <b>3 ลูกขึ้นไป</b>ในด่าน ได้หมุนวงล้อ 🎡 ลุ้นตัวช่วย ⚽ ลูกพิเศษ (+1 ลูกในด่านถัดไป) หรือแต้ม
@@ -240,8 +240,10 @@ table.lb td.n{text-align:right;font-weight:800}
 <script>
 /* ================= CONFIG ================= */
 const SHOTS_PER_LEVEL = 5;
-const BOSS_ZONE_FROM = 16;           // ด่านนี้ขึ้นไป ต้องเข้าแค่ 1 ลูก
-const needFor = lv => (S.mode==='hc' ? 1 : (lv + 1 >= BOSS_ZONE_FROM ? 1 : 2));
+const NEED_PER_LEVEL = 2;            // ทุกด่านต้องยิงเข้าอย่างน้อย 2 ลูก
+const needFor = lv => (S.mode==='hc' ? 1 : NEED_PER_LEVEL);
+// เวอร์ชันกติกา: เปลี่ยนเมื่อปรับกติกา → leaderboard เริ่มกระดานใหม่ และหน้าเว็บเก่าส่งคะแนนไม่ได้
+const RULES_VERSION = 'r2';
 const CONTINUES = 1;                 // ชีวิตพิเศษต่อเกม
 const START_ITEMS = { cheer:1, boots:1, var:1 };   // ตัวช่วยตอนเริ่มเกม
 const BOOTS_MULT = 1.5;              // 👟 รองเท้าทองคำ: กรอบที่นับว่าเข้าใหญ่ขึ้น 50%
@@ -363,17 +365,19 @@ async function loadData(){
 }
 
 /* ================= LEADERBOARD ================= */
-const LB_LOCAL = 'bt20_lb_';
+const LB_LOCAL = 'bt20_lb_' + RULES_VERSION + '_';
 function lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 async function lbFetch(board){
-  try{ const r = await fetch('/api/leaderboard?board='+encodeURIComponent(board)); if(!r.ok) throw 0; const j = await r.json(); return {list:j.entries||[], online:true}; }
+  try{ const r = await fetch('/api/leaderboard?v='+RULES_VERSION+'&board='+encodeURIComponent(board)); if(!r.ok) throw 0; const j = await r.json(); return {list:j.entries||[], online:true}; }
   catch(e){ return {list: lsGet(LB_LOCAL+board,[]), online:false}; }
 }
 function lbLocal(board, entry){ const l = lsGet(LB_LOCAL+board,[]); l.push({...entry, at:Date.now()}); l.sort((a,b)=>b.score-a.score); lsSet(LB_LOCAL+board,l.slice(0,50)); }
 async function lbSubmit(entry){
   if(SAMPLE_MODE){ if(entry.mode==='hc') lbLocal('hc',entry); else { lbLocal('all',entry); lbLocal('daily-'+entry.daily,entry); } return false; }
-  try{ const r = await fetch('/api/leaderboard',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(entry)}); if(!r.ok) throw 0; return true; }
+  try{ const r = await fetch('/api/leaderboard',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...entry, v:RULES_VERSION})});
+    if(r.status===409){ showUpdateBar(); return false; }
+    if(!r.ok) throw 0; return true; }
   catch(e){ if(entry.mode==='hc') lbLocal('hc',entry); else { lbLocal('all',entry); lbLocal('daily-'+entry.daily,entry); } return false; }
 }
 async function renderLb(board){
@@ -392,7 +396,7 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 const $ = id => document.getElementById(id);
 function renderLadder(){
   $('ladder').innerHTML = ORDER.map((k,i)=>`
-    <div class="card rung ${i===ORDER.length-1?'boss':(i+1>=BOSS_ZONE_FROM?'bosszone':'')}">
+    <div class="card rung ${i===ORDER.length-1?'boss':''}">
       <span class="lv">${i===ORDER.length-1?'BOSS':'ด่าน '+(i+1)}</span>
       <div class="face" style="background:${k.color}"><img data-code="${k.keeper.code??''}" alt=""></div>
       <div><b>${esc(k.keeper.name)}</b><small>${esc(k.team)}</small></div>
@@ -420,6 +424,7 @@ const svg = $('scene');
 const HC = () => S.mode === 'hc';
 
 function startRun(mode='normal'){
+  checkVersion();
   S.nameGiven = !!$('nameInput').value.trim();
   S.name = ($('nameInput').value.trim() || 'ไม่ประสงค์ออกนาม').slice(0,16);
   S.helpShown = false;
@@ -478,7 +483,7 @@ function showLevelIntro(){
   drawKeeper(k); renderHud(); renderZones(); renderItems(); renderCheer(); clearPins(); moveCam(true);
   setHint(HC() ? 'อ่านข้อมูลลูกนี้ แล้วจิ้มมุมที่คิดว่าลูกเข้า' : 'เลือกจุดยิง แล้วจิ้มมุมในกรอบประตู');
   modal(`
-    <span class="reveal-tag">${HC()?'💀 HARDCORE · ':''}${boss?'👑 BOSS · ':(!HC() && S.level+1>=BOSS_ZONE_FROM?'🔥 โซนบอส · ':'')}ด่าน ${S.level+1} / ${ORDER.length}${S.attempt?' · แก้ตัว':''}</span>
+    <span class="reveal-tag">${HC()?'💀 HARDCORE · ':''}${boss?'👑 BOSS · ':''}ด่าน ${S.level+1} / ${ORDER.length}${S.attempt?' · แก้ตัว':''}</span>
     <div class="reveal-face" style="background:${k.color}"><img id="mImg" alt=""></div>
     <h2>${esc(k.keeper.name)}</h2>
     <div class="meta">${esc(k.team)} · เสียไป <b>${k.conceded}</b> ลูกฤดูกาลนี้${k.goals.length!==k.conceded?`<br>(ยิงได้ในเกม ${k.goals.length} ลูก ไม่รวมทำเข้าประตูตัวเอง)`:''}</div>
@@ -1322,6 +1327,22 @@ function goHome(showLb){
 function modal(html){ $('modalCard').innerHTML = html; $('modal').classList.remove('hidden'); }
 function closeModal(){ $('modal').classList.add('hidden'); }
 
+/* ===== เช็กเวอร์ชันใหม่ ===== */
+function showUpdateBar(){
+  if($('updBar')) return;
+  const b = document.createElement('button'); b.id = 'updBar';
+  b.textContent = '✨ มีเวอร์ชันใหม่ (กติกาอัปเดต) · แตะเพื่อรีเฟรช';
+  b.style.cssText = 'position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;font:inherit;font-weight:800;font-size:15px;background:#ffd23f;color:#16142b;border:3px solid #16142b;border-radius:14px;box-shadow:0 5px 0 #16142b;padding:10px 16px;cursor:pointer';
+  b.onclick = ()=> location.reload();
+  document.body.appendChild(b);
+}
+async function checkVersion(){
+  if(!/^https?:/.test(location.protocol)) return;
+  try{ const r = await fetch('version.json?t='+Date.now(), {cache:'no-store'}); if(!r.ok) return; const j = await r.json(); if(j.rules && j.rules !== RULES_VERSION) showUpdateBar(); }catch(e){}
+}
+setInterval(checkVersion, 5*60*1000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkVersion(); });
+
 /* ================= INIT ================= */
 (async function(){
   $('nameInput').value = lsGet('bt20_name','') || '';
@@ -1330,7 +1351,7 @@ function closeModal(){ $('modal').classList.add('hidden'); }
   $('btnMute').onclick = ()=>{ muted=!muted; lsSet('bt20_muted',muted); $('btnMute').textContent = muted?'🔇':'🔊'; crowd(!muted); };
   initSfx();
   await loadData();
-  renderLadder(); refreshDailyBtn();
+  renderLadder(); refreshDailyBtn(); checkVersion();
   $('btnStart').onclick = ()=>startRun('normal');
   $('btnHc').onclick = ()=>startRun('hc');
   document.addEventListener('keydown', e=>{ if(e.key==='Enter' && !$('screenStart').classList.contains('hidden')) startRun(); });

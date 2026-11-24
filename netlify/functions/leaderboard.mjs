@@ -5,6 +5,9 @@
 import { getStore } from "@netlify/blobs";
 
 const MAX_ENTRIES = 100;
+// เวอร์ชันกติกาปัจจุบัน: กระดานแยกตามเวอร์ชัน (ของเก่ายังอยู่ใน store แค่ไม่แสดง) และไม่รับคะแนนจากหน้าเว็บเวอร์ชันเก่า
+const RULES = "r2";
+const key = (board) => `${RULES}:${board}`;
 // เพดานแต้ม: (20 ด่าน + ชีวิตพิเศษ) × 5 ลูก × 500 + โบนัสผ่านด่าน 200 × 20 + วงล้อ 300 × 19
 const MAX_SCORE = 30 * 5 * 500 + 20 * 200 + 19 * 300;
 const BOARD_RE = /^(all|hc|daily-\d{4}-\d{2}-\d{2})$/;
@@ -19,8 +22,8 @@ const todayBKK = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangko
 
 export default async (req) => {
   const store = getStore("beat-the-20");
-  const read = async (board) => (await store.get(board, { type: "json" })) || [];
-  const write = async (board, list) => store.setJSON(board, list.slice(0, MAX_ENTRIES));
+  const read = async (board) => (await store.get(key(board), { type: "json" })) || [];
+  const write = async (board, list) => store.setJSON(key(board), list.slice(0, MAX_ENTRIES));
 
   if (req.method === "GET") {
     const board = new URL(req.url).searchParams.get("board") || "all";
@@ -31,6 +34,7 @@ export default async (req) => {
   if (req.method === "POST") {
     let b;
     try { b = await req.json(); } catch { return json({ error: "bad json" }, 400); }
+    if (b.v !== RULES) return json({ error: "old version", rules: RULES }, 409);
     const name = String(b.name || "").replace(/[<>]/g, "").trim().slice(0, 16) || "ไม่ประสงค์ออกนาม";
     const score = Math.floor(Number(b.score));
     const level = Math.floor(Number(b.level));
