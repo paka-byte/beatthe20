@@ -1,0 +1,17 @@
+{
+  "name": "beat-the-20",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ยิงผ่านโกลพรีเมียร์ลีค 20 คน ด้วยมุมที่เคยเสียจริง (FotMob shotmap + FPL photos)",
+  "scripts": {
+    "fetch": "node scripts/fetch-data.mjs",
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

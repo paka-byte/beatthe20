@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>BEAT THE 20 · ยิงผ่าน 20 นายด่าน</title>
+<meta name="theme-color" content="#14213d">
+<style>
+@font-face{font-family:Kanit;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/kanit-thai-400-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+@font-face{font-family:Kanit;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/kanit-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Kanit;font-style:normal;font-weight:600;font-display:swap;src:url(fonts/kanit-thai-600-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+@font-face{font-family:Kanit;font-style:normal;font-weight:600;font-display:swap;src:url(fonts/kanit-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Kanit;font-style:normal;font-weight:800;font-display:swap;src:url(fonts/kanit-thai-800-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+@font-face{font-family:Kanit;font-style:normal;font-weight:800;font-display:swap;src:url(fonts/kanit-latin-800-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{
+  --ink:#16142b; --navy:#14213d; --navy2:#1f2f57; --yellow:#ffd23f; --red:#ff4f5e;
+  --green:#3ddc84; --paper:#fff8e7; --muted:#9aa6c4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Kanit,system-ui,sans-serif;background:radial-gradient(ellipse at top,#2a3d6e 0%,var(--navy) 55%,#0b1226 100%);color:var(--paper);min-height:100%;-webkit-tap-highlight-color:transparent;user-select:none}
+button{font-family:inherit;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.wrap{max-width:860px;margin:0 auto;padding:14px 14px 40px}
+.hidden{display:none!important}
+
+.card{background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink)}
+.btn{background:var(--yellow);color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);font-weight:800;font-size:18px;padding:10px 22px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{background:#fff}
+.btn.sm{font-size:14px;padding:6px 12px;border-radius:10px;box-shadow:0 3px 0 var(--ink)}
+.btn small{display:block;font-size:12px;font-weight:400;line-height:1.1}
+
+.logo{text-align:center;margin:8px 0 4px}
+.logo h1{font-size:clamp(34px,7vw,58px);font-weight:800;letter-spacing:1px;color:var(--yellow);-webkit-text-stroke:2px var(--ink);text-shadow:0 5px 0 var(--ink);line-height:1}
+.logo p{color:var(--muted);font-size:15px;margin-top:6px}
+.sample-banner{background:var(--red);color:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px 12px;font-size:13px;text-align:center;margin:10px 0}
+
+.tabs{display:flex;gap:8px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.tab{background:var(--navy2);color:var(--paper);border:3px solid var(--ink);border-radius:12px;padding:6px 14px;font-weight:600}
+.tab.on{background:var(--yellow);color:var(--ink)}
+.ladder{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.rung{display:flex;align-items:center;gap:10px;padding:8px 10px;position:relative}
+.rung .lv{position:absolute;top:-10px;left:-8px;background:var(--ink);color:var(--yellow);font-weight:800;font-size:13px;border-radius:9px;padding:1px 7px}
+.rung .face{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);overflow:hidden;flex:none;background:#cfd6e6}
+.rung .face img{width:100%;height:118%;object-fit:cover;object-position:top}
+.rung b{display:block;font-size:15px;line-height:1.15}
+.rung small{color:#5b6280;font-size:12px}
+.rung .ga{margin-left:auto;text-align:center;font-weight:800;font-size:20px;line-height:1}
+.rung .ga small{display:block;font-size:10px;font-weight:400}
+.rung.boss{background:#ffe1e4}
+.rung.bosszone{background:#fff0d6}
+.start-row{display:flex;gap:10px;justify-content:center;align-items:stretch;flex-wrap:wrap;margin:16px 0}
+.start-row input{font-family:inherit;font-size:17px;border:3px solid var(--ink);border-radius:12px;padding:9px 12px;width:200px}
+.rules{padding:12px 16px;font-size:14px;line-height:1.65;margin-top:14px}
+.rules b{color:#c0283a}
+table.lb{width:100%;border-collapse:collapse;font-size:15px}
+table.lb th,table.lb td{padding:7px 10px;border-bottom:2px dashed #d9cfb6;text-align:left}
+table.lb td.n{text-align:right;font-weight:800}
+
+.hud{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:10px}
+.hud .kface{width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);overflow:hidden;flex:none;background:#cfd6e6}
+.hud .kface img{width:100%;height:118%;object-fit:cover;object-position:top}
+.hud .kinfo b{font-size:17px;display:block;line-height:1.1}
+.hud .kinfo small{color:#5b6280}
+.hud .stat{margin-left:auto;text-align:right}
+.hud .stat .big{font-size:22px;font-weight:800;line-height:1}
+.balls{display:flex;gap:4px;justify-content:flex-end;margin-top:4px}
+.balls i{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink);background:#fff;display:block}
+.balls i.g{background:var(--green)} .balls i.s{background:var(--red)}
+.mute{background:none;border:none;font-size:22px;margin-left:4px}
+.stage{position:relative;border:3px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:0 6px 0 var(--ink);touch-action:manipulation}
+.stage svg{display:block;width:100%;height:auto;cursor:crosshair}
+.toast{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) scale(.4);font-size:clamp(40px,9vw,78px);font-weight:800;color:var(--yellow);-webkit-text-stroke:3px var(--ink);text-shadow:0 6px 0 var(--ink);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.2,1.6,.4,1),opacity .2s;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.toast.save{color:var(--red)}
+.tv{position:absolute;right:8px;bottom:8px;width:38%;aspect-ratio:800/520;border:4px solid var(--ink);border-radius:12px;overflow:hidden;background:#0d1530;box-shadow:0 5px 0 var(--ink);z-index:3}
+.tv svg{display:block;width:100%;height:100%}
+.tv::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 2px,transparent 2px 4px)}
+.tvbar{position:absolute;left:6px;top:4px;font-size:11px;font-weight:800;color:#fff;background:rgba(22,20,43,.75);padding:1px 7px;border-radius:6px;z-index:2}
+.tvbar .rec{color:#ff4f5e;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+.tvnoise{position:absolute;left:0;right:0;bottom:0;display:none;flex-direction:column;align-items:flex-start;gap:0;padding:2px 7px 4px;color:#fff;text-shadow:0 1px 0 #000;font-size:10px;line-height:1.25;background:linear-gradient(transparent,rgba(13,21,48,.85))}
+.tvnoise.on{display:flex;animation:noise .15s steps(2) infinite}
+.tvnoise b{font-size:12px;color:var(--yellow)}
+@keyframes noise{50%{background-position:2px 0}}
+.tvagain{position:absolute;right:5px;top:4px;z-index:2;font:inherit;font-size:11px;font-weight:700;background:var(--yellow);border:2px solid var(--ink);border-radius:8px;padding:0 7px;cursor:pointer}
+.hint{position:absolute;left:0;right:0;top:8px;text-align:center;font-size:15px;font-weight:600;text-shadow:0 2px 0 var(--ink);pointer-events:none;padding:0 10px}
+.zones{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:12px 0 4px}
+.zone{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:12px;padding:5px 11px;font-weight:600;font-size:14px;box-shadow:0 3px 0 var(--ink);display:flex;align-items:center;gap:6px}
+.zone.on{background:var(--yellow)}
+.zone .c{background:var(--ink);color:var(--yellow);border-radius:8px;padding:0 6px;font-size:12px}
+.zone.empty{opacity:.55}
+.tools{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.item{background:#2b2f4d;color:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px 12px;font-weight:600;font-size:14px;box-shadow:0 3px 0 var(--ink);display:flex;align-items:center;gap:6px}
+.item .c{background:var(--yellow);color:var(--ink);border-radius:8px;padding:0 7px;font-size:12px;font-weight:800}
+.item.on{background:var(--yellow);color:var(--ink)}
+.hcinfo{margin:10px 0 0;padding:8px 10px;text-align:center;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);font-size:14px;line-height:1.9}
+.hcinfo b{margin-right:4px}
+.scout{color:var(--muted);font-size:12px;text-align:center}
+
+.modal{position:fixed;inset:0;background:rgba(8,12,28,.72);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20;overflow:auto}
+.modal .card{max-width:420px;width:100%;padding:18px;text-align:center;animation:pop .3s cubic-bezier(.2,1.6,.4,1);margin:auto}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.reveal-tag{display:inline-block;background:var(--ink);color:var(--yellow);font-weight:800;border-radius:10px;padding:2px 12px;font-size:14px}
+.reveal-face{width:130px;height:130px;border-radius:50%;border:4px solid var(--ink);overflow:hidden;margin:12px auto 8px;background:#cfd6e6;box-shadow:0 5px 0 var(--ink)}
+.reveal-face img{width:100%;height:122%;object-fit:cover;object-position:top}
+.vs{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 6px}
+.vs .reveal-face{width:112px;height:112px;margin:0}
+.vs .reveal-face.k{width:72px;height:72px}
+.vs b{font-size:22px;font-weight:800;color:#c0283a}
+.likeline{font-size:15px;color:#5b6280}
+.modal h2{font-size:26px;line-height:1.1}
+.modal .meta{color:#5b6280;font-size:14px;margin:6px 0 12px;line-height:1.5}
+.pill{display:inline-block;border:2px solid var(--ink);border-radius:9px;padding:0 8px;margin:2px;font-size:13px;font-weight:600;background:#fff}
+.pill.x{background:var(--yellow)}
+.mini-goal{width:100%;margin:8px 0}
+.shooters{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 14px}
+.shooters span{font-size:12px;background:#efe6cf;border-radius:8px;padding:2px 8px}
+.btnrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.share-preview{width:100%;border:3px solid var(--ink);border-radius:12px;margin:10px 0}
+.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:22px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">
+    <h1>BEAT THE 20</h1>
+    <p>ยิงผ่านนายด่าน 20 คน · ยิงเข้าได้เฉพาะมุมที่โกลคนนั้นเคยเสียจริงฤดูกาลนี้</p>
+  </div>
+  <div id="sampleBanner" class="sample-banner hidden">โหมดตัวอย่าง: ข้อมูลในเกมนี้สุ่มขึ้นมา (ยังไม่มีไฟล์ data/keepers.json) · รัน <code>npm run fetch</code> เพื่อดึงข้อมูลจริง</div>
+
+  <section id="screenStart">
+    <div class="tabs">
+      <button class="tab on" data-tab="ladder">นายด่าน 20 คน</button>
+      <button class="tab" data-tab="daily">🏆 วันนี้</button>
+      <button class="tab" data-tab="all">🏆 ตลอดกาล</button>
+      <button class="tab" data-tab="hc">💀 Hardcore</button>
+    </div>
+    <div id="tabLadder"><div class="ladder" id="ladder"></div></div>
+    <div id="tabLb" class="hidden"><div class="card" style="padding:10px 14px"><table class="lb" id="lbTable"></table></div></div>
+    <div class="start-row">
+      <input id="nameInput" maxlength="16" placeholder="ชื่อนักเตะของคุณ">
+      <button class="btn red" id="btnStart">เริ่มยิง ⚽<small>โหมดปกติ</small></button>
+      <button class="btn" id="btnHc" style="background:#16142b;color:#fff">💀 Hardcore<small>สุ่มลูกจริง ยิงตัวต่อตัว</small></button>
+    </div>
+    <div class="card rules">
+      <b>กติกา</b> · โกลเรียงจากคนที่เสียเยอะสุดไปหาคนที่เสียน้อยสุด ด่าน 20 คือบอส · ด่านละ <b>5 ลูก</b> · แก้ตัวยิงด่านเดิมใหม่ได้ <b>1 ครั้ง</b><br>
+      <b>โหมดปกติ</b> · เลือกจุดยิง แล้วจิ้มมุมในกรอบ ตรงกับมุมที่โกลเคยเสียจากจุดนั้นจริงคือ <b>เข้า</b> · ด่าน 1–15 ต้องเข้า 2 ลูก โซนบอส 16–20 ต้องเข้า 1 ลูก<br>
+      <b>💀 Hardcore</b> · ยิงไม่รู้จบ สุ่มลูกจริงจากโกลทั้ง 20 คน บอกทีม เท้า จังหวะ ระยะ xG ครบ · แต่ละลูกยิงได้ 5 ครั้ง (พลาดแล้วเกมบอกทาง) ไม่เข้าคือจบ · เข้าภายใน 3 ครั้งได้หมุนวงล้อ<br>
+      <b>ตัวช่วย</b> · 📣 กองเชียร์หลังประตู บอกว่าลูกไปทางซ้าย กลาง หรือขวา · 👟 รองเท้าทองคำ กรอบที่นับว่าเข้าใหญ่ขึ้น 50% หนึ่งลูก · 📺 VAR รีเพลย์ ย้ายไปยืนจุดยิงจริง แล้วเปิดจอให้ดูทิศลูกแบบช้า ๆ (ภาพตัดก่อนถึงประตู)<br>
+      ยิงเข้า <b>3 ลูกขึ้นไป</b>ในด่าน ได้หมุนวงล้อ 🎡 ลุ้นตัวช่วย ⚽ ลูกพิเศษ (+1 ลูกในด่านถัดไป) หรือแต้ม
+    </div>
+  </section>
+
+  <section id="screenGame" class="hidden">
+    <div class="card hud">
+      <div class="kface"><img id="hudFace" alt=""></div>
+      <div class="kinfo"><b id="hudName"></b><small id="hudSub"></small></div>
+      <div class="stat">
+        <div class="big" id="hudScore">0</div>
+        <div class="balls" id="hudBalls"></div>
+      </div>
+      <button class="mute" id="btnMute" title="เสียง">🔊</button>
+    </div>
+    <div class="stage" id="stage">
+      <svg id="scene" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f1a38"/><stop offset="1" stop-color="#26407a"/></linearGradient>
+          <pattern id="net" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M0 0H14M0 0V14" stroke="#fff" stroke-opacity=".5" stroke-width="1.6"/></pattern>
+          <pattern id="crowd" width="22" height="20" patternUnits="userSpaceOnUse"><circle cx="6" cy="8" r="5" fill="#3b4f86"/><circle cx="17" cy="13" r="5" fill="#2f4170"/></pattern>
+          <clipPath id="headClip"><circle cx="0" cy="0" r="36"/></clipPath>
+          <radialGradient id="spot" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="800" height="520" fill="url(#sky)"/>
+        <rect y="40" width="800" height="150" fill="url(#crowd)"/>
+        <rect y="40" width="800" height="150" fill="url(#spot)"/>
+        <rect y="180" width="800" height="22" fill="#e6e9f2" stroke="#16142b" stroke-width="3"/>
+        <text x="400" y="197" text-anchor="middle" font-size="14" font-weight="800" fill="#16142b" font-family="Kanit">BEAT THE 20 · BEAT THE 20 · BEAT THE 20 · BEAT THE 20</text>
+        <rect y="200" width="800" height="320" fill="#3fae5a"/>
+        <rect y="236" width="800" height="36" fill="#47bd63"/><rect y="320" width="800" height="54" fill="#47bd63"/><rect y="440" width="800" height="80" fill="#47bd63"/>
+        <g id="world">
+        <g id="pitch">
+          <path d="M-60 760 L150 287 L650 287 L860 760" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="4"/>
+          <path d="M-200 340 L1000 340" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+          <path d="M-400 287 L1200 287" stroke="#fff" stroke-width="4"/>
+        </g>
+        <g id="goal">
+          <path d="M132 291 L668 291 L628 262 L172 262Z" fill="#14552a" opacity=".35"/>
+          <path d="M150 120 L650 120 L612 142 L188 142Z" fill="#0b1430" fill-opacity=".45"/>
+          <path d="M150 120 L188 142 L188 262 L150 287Z" fill="#0b1430" fill-opacity=".35"/>
+          <path d="M650 120 L612 142 L612 262 L650 287Z" fill="#0b1430" fill-opacity=".35"/>
+          <rect x="188" y="142" width="424" height="120" fill="#0b1430" fill-opacity=".4"/>
+          <rect id="netRect" x="150" y="120" width="500" height="170" fill="url(#net)"/>
+          <path d="M188 262 L188 142 L612 142 L612 262 L188 262 M150 287 L188 262 M650 287 L612 262 M150 120 L188 142 M650 120 L612 142" stroke="#e6ecf7" stroke-opacity=".85" stroke-width="4" fill="none" stroke-linejoin="round"/>
+          <g id="tapeLayer"></g>
+          <path d="M150 293 L150 120 L650 120 L650 293" fill="none" stroke="#16142b" stroke-width="22" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M150 291 L150 120 L650 120 L650 291" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/>
+          <path d="M154 289 L154 124 L646 124 L646 289" fill="none" stroke="#c4cde0" stroke-width="4" stroke-linejoin="round"/>
+          <ellipse cx="150" cy="292" rx="14" ry="4" fill="#16142b" opacity=".5"/><ellipse cx="650" cy="292" rx="14" ry="4" fill="#16142b" opacity=".5"/>
+        </g>
+        <g id="pins"></g>
+        <g id="missMarks"></g>
+        <g id="keeper"></g>
+        <g id="aim" opacity="0"><circle r="16" fill="none" stroke="#ffd23f" stroke-width="4"/><circle r="3" fill="#ffd23f"/></g>
+        </g>
+        <g id="ball"><g id="ballSpin"><image href="ball.png" x="-22" y="-22" width="44" height="44"/></g></g>
+      </svg>
+      <div class="toast" id="toast">GOAL!</div>
+      <div class="tv hidden" id="tv"><div class="tvbar"><span class="rec">●</span> VAR</div><svg id="tvSvg" viewBox="70 70 660 440" preserveAspectRatio="xMidYMid slice"></svg><div class="tvnoise" id="tvNoise"><b>📡 สัญญาณขาด!</b><span>ลูกไปต่อทางไหน เดาเอง</span></div><button class="tvagain" id="tvAgain">↻ ซ้ำ</button></div>
+      <div class="hint" id="hint">เลือกจุดยิง แล้วจิ้มมุมในกรอบประตู</div>
+    </div>
+    <div class="hcinfo hidden" id="hcInfo"></div>
+    <div class="zones" id="zones"></div>
+    <div class="scout" id="zoneNote">ตัวเลขบนปุ่ม = จำนวนลูกที่โกลเสียจากจุดนั้น และคุณยังไม่เจอ</div>
+    <div class="tools">
+      <button class="item" id="btnCheer"></button>
+      <button class="item" id="btnBoots"></button>
+      <button class="item" id="btnVar">📺 VAR</button>
+    </div>
+  </section>
+
+  <div class="foot">For fun only · ข้อมูลลูกยิงจาก FotMob · รูปนักเตะจาก FPL · เสียง: Oculus Audio Pack โดย Meta (CC BY 4.0), Kenney.nl (CC0), Mixkit · ไม่มีส่วนเกี่ยวข้องกับ Premier League หรือสโมสรใด</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+/* ================= CONFIG ================= */
+const SHOTS_PER_LEVEL = 5;
+const BOSS_ZONE_FROM = 16;           // ด่านนี้ขึ้นไป ต้องเข้าแค่ 1 ลูก
+const needFor = lv => (S.mode==='hc' ? 1 : (lv + 1 >= BOSS_ZONE_FROM ? 1 : 2));
+const CONTINUES = 1;                 // ชีวิตพิเศษต่อเกม
+const START_ITEMS = { cheer:1, boots:1, var:1 };   // ตัวช่วยตอนเริ่มเกม
+const BOOTS_MULT = 1.5;              // 👟 รองเท้าทองคำ: กรอบที่นับว่าเข้าใหญ่ขึ้น 50%
+const WHEEL_MIN_GOALS = 3;           // ยิงเข้ากี่ลูกในด่านถึงได้หมุนวงล้อ
+const HC_RADIUS_BASE = 0.9, HC_RADIUS_XG = 0.8;
+const HC_TRIES = 5;                  // Hardcore: แต่ละลูกยิงได้ 5 ครั้ง ไม่เข้าคือจบเกม
+const HC_SPIN_WITHIN = 3;            // Hardcore: เข้าภายใน 3 ครั้งแรก ได้หมุนวงล้อ   // Hardcore: รัศมี = 0.9 + 0.8×xG (เมตร)
+const HIT_RADIUS_M = 0.9;
+const NEAR_RADIUS_M = 1.8;
+const GOAL_W = 7.32, GOAL_H = 2.44;
+const GX0 = 150, GX1 = 650, GBAR = 120, GGROUND = 287;
+
+const ZONES = [
+  { id:'pen',  th:'จุดโทษ',       bx:400, by:470 },
+  { id:'six',  th:'ในเขต 6 หลา',   bx:400, by:430 },
+  { id:'boxL', th:'ซ้ายกรอบ',      bx:220, by:470 },
+  { id:'boxC', th:'กลางกรอบ',      bx:400, by:480 },
+  { id:'boxR', th:'ขวากรอบ',       bx:580, by:470 },
+  { id:'edge', th:'ขอบกรอบ',       bx:400, by:495 },
+  { id:'long', th:'ไกลนอกกรอบ',    bx:400, by:505 },
+];
+const SITU_TH = { RegularPlay:'จังหวะเล่นปกติ', FastBreak:'สวนกลับ', FromCorner:'จากลูกเตะมุม', SetPiece:'จากลูกตั้งเตะ',
+  FreeKick:'ฟรีคิกตรง', Penalty:'จุดโทษ', ThrowInSetPiece:'จากลูกทุ่ม' };
+
+/* ================= SOUND (ไฟล์เสียงจริงในโฟลเดอร์ sfx/) ================= */
+const SFX_FILES = { kick:'kick', net:'net', cheer:'cheer', save:'save', groan:'groan', whistle:'whistle', crowd:'crowd', spin:'spin', prize:'prize' };
+const SFX = {};
+let muted = false;
+function initSfx(){
+  for(const [k,f] of Object.entries(SFX_FILES)){
+    const a = new Audio(); a.preload = 'auto'; a.src = `sfx/${f}.mp3`;
+    a.addEventListener('error', ()=>{ SFX[k] = null; });
+    if(k==='crowd'){ a.loop = true; a.volume = 0.25; }
+    SFX[k] = a;
+  }
+}
+function sfx(k, vol=1){
+  const a = SFX[k]; if(!a || muted) return;
+  try{ const c = a.cloneNode(); c.volume = vol; c.play().catch(()=>{}); }catch(e){}
+}
+function crowd(on){ const a = SFX.crowd; if(!a) return; try{ if(on && !muted) a.play().catch(()=>{}); else a.pause(); }catch(e){} }
+function buzz(p){ try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
+
+/* ================= PHOTOS (FPL) ================= */
+const SILHOUETTE = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+ '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 140"><rect width="110" height="140" fill="#cfd6e6"/><circle cx="55" cy="52" r="26" fill="#7d86a3"/><path d="M12 140c4-34 22-50 43-50s39 16 43 50z" fill="#7d86a3"/><text x="55" y="62" text-anchor="middle" font-size="26" font-family="Kanit" font-weight="800" fill="#cfd6e6">?</text></svg>');
+function photoUrls(code){
+  if(!code) return [];
+  return [
+    `https://resources.premierleague.com/premierleague25/photos/players/110x140/${code}.png`,
+    `https://resources.premierleague.com/premierleague26/photos/players/110x140/${code}.png`,
+    `https://resources.premierleague.com/premierleague/photos/players/110x140/p${code}.png`,
+  ];
+}
+function setPhoto(el, code){
+  const list = photoUrls(code); let i = 0;
+  const isSvg = el instanceof SVGElement;
+  const apply = u => isSvg ? el.setAttribute('href', u) : (el.src = u);
+  el.onerror = () => { i++; apply(i < list.length ? list[i] : SILHOUETTE); if(i >= list.length) el.onerror = null; };
+  apply(list.length ? list[0] : SILHOUETTE);
+}
+
+/* ================= RANDOM / DATA ================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return (h^h>>>16)>>>0}
+function rngFor(s){ return mulberry32(hashStr(s)); }
+function todayBKK(){ return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Bangkok'}).format(new Date()); }
+function thaiDate(iso){ try{ return new Intl.DateTimeFormat('th-TH',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Bangkok'}).format(new Date(iso+'T12:00:00+07:00')); }catch(e){ return iso; } }
+
+let DATA = null, ORDER = [], SAMPLE_MODE = false;
+function zoneOf(dx, lat, situation){
+  if(situation === 'Penalty') return 'pen';
+  const a = Math.abs(lat);
+  if(dx <= 5.5 && a <= 9.16) return 'six';
+  if(dx <= 16.5 && a <= 9.16) return 'boxC';
+  if(dx <= 16.5 && a <= 20.16) return lat < 0 ? 'boxL' : 'boxR';
+  if(dx <= 25 && a <= 20.16) return 'edge';
+  return 'long';
+}
+// ข้อมูลตัวอย่าง (สุ่ม) ใช้ตอนยังไม่มี data/keepers.json — ชื่อทั้งหมดเป็นชื่อสมมติ
+function makeSample(){
+  const R = mulberry32(2026);
+  const cols = ['#d7263d','#1b998b','#2e86ab','#f46036','#6a4c93','#ffb400','#3c3c3c','#8ac926','#1982c4','#ff595e','#6d597a','#e56b6f','#355070','#b56576','#0f8b8d','#ec9a29','#a8201a','#143642','#4361ee','#7209b7'];
+  const shooters = Array.from({length:40},(_,i)=>`Striker ${String(i+1).padStart(2,'0')}`);
+  const sits = ['RegularPlay','RegularPlay','RegularPlay','FastBreak','FromCorner','SetPiece','FreeKick'];
+  const keepers = cols.map((c,i)=>{
+    const n = 6 + Math.floor(R()*24);
+    const goals = [];
+    for(let k=0;k<n;k++){
+      let situation = R()<0.1 ? 'Penalty' : sits[Math.floor(R()*sits.length)];
+      let dx, lat;
+      if(situation==='Penalty'){dx=11;lat=0}
+      else if(situation==='FreeKick'){dx=18+R()*12;lat=(R()-.5)*30}
+      else {const r=R(); dx = r<.25? 2+R()*4 : r<.8? 6+R()*10.5 : 17+R()*14; lat=(R()-.5)*(dx<6?14:34)}
+      const corner = R()<0.65;
+      const gx = corner ? (R()<.5? 0.04+R()*0.18 : 0.78+R()*0.18) : 0.2+R()*0.6;
+      const gy = R()<0.55 ? R()*0.35 : 0.35+R()*0.6;
+      goals.push({ shooter: shooters[Math.floor(R()*shooters.length)], shooterCode:null,
+        opponent:`ทีมตัวอย่าง ${String.fromCharCode(65+Math.floor(R()*20))}`, gw:1+Math.floor(R()*12), minute:1+Math.floor(R()*95),
+        situation, zone: zoneOf(dx,lat,situation), gx:+gx.toFixed(3), gy:+gy.toFixed(3), xgot:+(0.05+R()*0.9).toFixed(2),
+        xg: situation==='Penalty' ? 0.76 : +Math.max(0.02, Math.min(0.85, 0.9*Math.exp(-Math.hypot(dx,lat*0.8)/6.5))).toFixed(2),
+        foot: ['RightFoot','RightFoot','LeftFoot','Header'][Math.floor(R()*4)], dx:+dx.toFixed(1), lat:+lat.toFixed(1) });
+    }
+    return { team:`ทีมตัวอย่าง ${String.fromCharCode(65+i)}`, teamShort:`T${String.fromCharCode(65+i)}`, color:c, color2:'#ffffff',
+      keeper:{ name:`Keeper ${String.fromCharCode(65+i)}`, code:null }, conceded:n + Math.floor(R()*2), goals };
+  });
+  return { season:'SAMPLE', updatedAt:null, keepers };
+}
+async function loadData(){
+  try{
+    const r = await fetch('data/keepers.json', {cache:'no-store'});
+    if(!r.ok) throw 0;
+    DATA = await r.json();
+    if(!DATA.keepers || !DATA.keepers.length) throw 0;
+  }catch(e){ DATA = makeSample(); SAMPLE_MODE = true; }
+  ORDER = [...DATA.keepers].sort((a,b)=> b.conceded - a.conceded || b.goals.length - a.goals.length);
+  $('sampleBanner').classList.toggle('hidden', !SAMPLE_MODE);
+}
+
+/* ================= LEADERBOARD ================= */
+const LB_LOCAL = 'bt20_lb_';
+function lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+async function lbFetch(board){
+  try{ const r = await fetch('/api/leaderboard?board='+encodeURIComponent(board)); if(!r.ok) throw 0; const j = await r.json(); return {list:j.entries||[], online:true}; }
+  catch(e){ return {list: lsGet(LB_LOCAL+board,[]), online:false}; }
+}
+function lbLocal(board, entry){ const l = lsGet(LB_LOCAL+board,[]); l.push({...entry, at:Date.now()}); l.sort((a,b)=>b.score-a.score); lsSet(LB_LOCAL+board,l.slice(0,50)); }
+async function lbSubmit(entry){
+  if(SAMPLE_MODE){ if(entry.mode==='hc') lbLocal('hc',entry); else { lbLocal('all',entry); lbLocal('daily-'+entry.daily,entry); } return false; }
+  try{ const r = await fetch('/api/leaderboard',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(entry)}); if(!r.ok) throw 0; return true; }
+  catch(e){ if(entry.mode==='hc') lbLocal('hc',entry); else { lbLocal('all',entry); lbLocal('daily-'+entry.daily,entry); } return false; }
+}
+async function renderLb(board){
+  const t = $('lbTable');
+  t.innerHTML = '<tr><td>กำลังโหลด…</td></tr>';
+  const {list, online} = await lbFetch(board);
+  const rows = list.slice(0,30).map((e,i)=>`<tr><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(e.name)}${e.like?`<br><small style="color:#8a8f9e">ยิงเหมือน ${esc(e.like)}</small>`:''}</td><td>${board==='hc'?`${e.goals} ลูก`:`ด่าน ${e.level}`}</td><td class="n">${e.score.toLocaleString()}</td></tr>`).join('');
+  const title = board==='all' ? 'ตลอดกาล' : board==='hc' ? '💀 Hardcore ตลอดกาล' : `วันนี้ · ${thaiDate(board.slice(6))}`;
+  t.innerHTML = `<tr><th colspan="4" style="text-align:center">${title}</th></tr><tr><th>#</th><th>ชื่อ</th><th>${board==='hc'?'ยิงเข้า':'ไปถึง'}</th><th style="text-align:right">แต้ม</th></tr>` +
+    (rows || '<tr><td colspan="4">ยังไม่มีใครลงชื่อ เป็นคนแรกเลย!</td></tr>') +
+    (online ? '' : '<tr><td colspan="4" style="color:#8a8f9e;font-size:12px">ออฟไลน์: แสดงคะแนนในเครื่องนี้เท่านั้น</td></tr>');
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+/* ================= START SCREEN ================= */
+const $ = id => document.getElementById(id);
+function renderLadder(){
+  $('ladder').innerHTML = ORDER.map((k,i)=>`
+    <div class="card rung ${i===ORDER.length-1?'boss':(i+1>=BOSS_ZONE_FROM?'bosszone':'')}">
+      <span class="lv">${i===ORDER.length-1?'BOSS':'ด่าน '+(i+1)}</span>
+      <div class="face" style="background:${k.color}"><img data-code="${k.keeper.code??''}" alt=""></div>
+      <div><b>${esc(k.keeper.name)}</b><small>${esc(k.team)}</small></div>
+      <div class="ga">${k.conceded}<small>เสีย</small></div>
+    </div>`).join('');
+  $('ladder').querySelectorAll('img').forEach(img=>setPhoto(img, img.dataset.code||null));
+}
+function refreshDailyBtn(){}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
+  const t = b.dataset.tab;
+  $('tabLadder').classList.toggle('hidden', t!=='ladder');
+  $('tabLb').classList.toggle('hidden', t==='ladder');
+  if(t==='daily') renderLb('daily-'+todayBKK());
+  if(t==='all') renderLb('all');
+  if(t==='hc') renderLb('hc');
+});
+
+/* ================= GAME STATE ================= */
+const S = { mode:'normal', daily:null, level:0, shots:[], found:new Set(), burned:new Set(), pool:new Set(), score:0, totalGoals:0,
+  zone:'boxC', busy:false, name:'', continues:CONTINUES, attempt:0, history:[], scored:[],
+  items:{ ...START_ITEMS }, cheerOn:false, bootsOn:false, varOn:-1, camOverride:null,
+  queue:[], cur:-1, varTarget:-1 };
+const svg = $('scene');
+const HC = () => S.mode === 'hc';
+
+function startRun(mode='normal'){
+  S.name = ($('nameInput').value.trim() || 'ไม่ประสงค์ออกนาม').slice(0,16);
+  lsSet('bt20_name', S.name);
+  S.mode = mode; S.daily = todayBKK();
+  S.level = 0; S.score = 0; S.totalGoals = 0; S.extraShots = 0; S.levelExtra = 0; S.continues = CONTINUES; S.attempt = 0; S.history = []; S.scored = [];
+  S.items = { ...START_ITEMS };
+  $('screenStart').classList.add('hidden'); $('screenGame').classList.remove('hidden');
+  $('zones').classList.toggle('hidden', HC()); $('zoneNote').classList.toggle('hidden', HC()); $('hcInfo').classList.toggle('hidden', !HC());
+  crowd(true);
+  if(HC()) startHc(); else showLevelIntro();
+}
+
+/* ===== 💀 HARDCORE: ยิงไม่รู้จบ สุ่มลูกจริงจากโกลทั้ง 20 คน พลาดได้ 5 ลูก ===== */
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function startHc(){
+  S.hcTry = 0; S.hcExtra = 0; S.hcExtraNow = 0; S.hcStreak = 0; S.hcBest = 0; S.shots = []; S.hcQueue = []; S.cheerOn = false; S.bootsOn = false; S.varOn = -1; S.camOverride = null;
+  hcNext(true);
+  modal(`
+    <span class="reveal-tag">💀 HARDCORE</span>
+    <h2 style="margin-top:12px">ยิงไม่รู้จบ</h2>
+    <div class="meta">เกมจะสุ่มลูกที่เคยเข้าจริงจากโกลทั้ง ${ORDER.length} คนมาทีละลูก<br>บอกทีม เท้า จังหวะ ระยะ และ xG ให้ครบ แต่ต้องยิงให้ตรงลูกนั้น</div>
+    <div class="meta">แต่ละลูกยิงได้ <b>${HC_TRIES} ครั้ง</b> · ไม่เข้าเลยคือจบเกม<br>เข้าภายใน <b>${HC_SPIN_WITHIN} ครั้งแรก</b> ได้หมุนวงล้อ 🎡 · ทุกครั้งที่พลาด เกมจะบอกทางว่าต้องขยับไปทางไหน</div>
+    <button class="btn red" id="mGo">ลุย!</button>`);
+  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); };
+}
+function hcNext(first){
+  if(!S.hcQueue.length) S.hcQueue = shuffle(ORDER.flatMap((k,ki)=>k.goals.map((_,gi)=>[ki,gi])));
+  const [ki, gi] = S.hcQueue.pop();
+  const changed = first || ki !== S.level;
+  S.level = ki; S.cur = gi; S.found = new Set(); S.burned = new Set(); S.pool = new Set([gi]);
+  S.hcTry = 0; S.hcExtraNow = S.hcExtra; S.hcExtra = 0; S.varOn = -1; S.camOverride = null; hideReplay(); $('missMarks') && ($('missMarks').innerHTML='');
+  clearVarPin();
+  if(changed){ drawKeeper(K()); clearPins(); }
+  renderHud(); renderItems(); renderCheer(); renderHcInfo();
+  setHint(`🧤 ${K().keeper.name} · อ่านข้อมูลลูกนี้ แล้วจิ้มมุมที่คิดว่าลูกเข้า`);
+  moveCam(first);
+}
+function K(){ return ORDER[S.level]; }
+function hcTriesMax(){ return HC_TRIES + (S.hcExtraNow||0); }
+function shotsFor(){ return SHOTS_PER_LEVEL + (S.levelExtra||0); }
+
+function showLevelIntro(){
+  const k = K(); const boss = S.level === ORDER.length-1; const need = needFor(S.level);
+  S.shots = []; S.found = new Set(); S.burned = new Set(); S.pool = new Set(k.goals.map((_,i)=>i));
+  S.levelExtra = S.extraShots||0; S.extraShots = 0;
+  S.cheerOn = false; S.bootsOn = false; S.varOn = -1; S.camOverride = null; clearVarPin(); hideReplay();
+  if(HC()){
+    S.queue = k.goals.map((_,i)=>i);
+    for(let i=S.queue.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.queue[i],S.queue[j]]=[S.queue[j],S.queue[i]]; }
+    nextTarget();
+  }else{
+    const cnt = zoneCounts();
+    S.zone = ZONES.slice().sort((a,b)=>cnt[b.id]-cnt[a.id])[0].id;
+  }
+  drawKeeper(k); renderHud(); renderZones(); renderItems(); renderCheer(); clearPins(); moveCam(true);
+  setHint(HC() ? 'อ่านข้อมูลลูกนี้ แล้วจิ้มมุมที่คิดว่าลูกเข้า' : 'เลือกจุดยิง แล้วจิ้มมุมในกรอบประตู');
+  modal(`
+    <span class="reveal-tag">${HC()?'💀 HARDCORE · ':''}${boss?'👑 BOSS · ':(!HC() && S.level+1>=BOSS_ZONE_FROM?'🔥 โซนบอส · ':'')}ด่าน ${S.level+1} / ${ORDER.length}${S.attempt?' · แก้ตัว':''}</span>
+    <div class="reveal-face" style="background:${k.color}"><img id="mImg" alt=""></div>
+    <h2>${esc(k.keeper.name)}</h2>
+    <div class="meta">${esc(k.team)} · เสียไป <b>${k.conceded}</b> ลูกฤดูกาลนี้${k.goals.length!==k.conceded?`<br>(ยิงได้ในเกม ${k.goals.length} ลูก ไม่รวมทำเข้าประตูตัวเอง)`:''}</div>
+    <div class="meta">${`มี ${shotsFor()} ลูก${S.levelExtra?` (รวม ⚽ ลูกพิเศษ +${S.levelExtra})`:''}`} · ต้องเข้าอย่างน้อย <b>${need}</b> ลูก<br>ยิงเข้า 3 ลูกขึ้นไป ได้หมุนวงล้อ 🎡</div>
+    <button class="btn red" id="mGo">ลุย!</button>`);
+  setPhoto($('mImg'), k.keeper.code);
+  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); };
+}
+
+function remaining(){ return [...S.pool].filter(i=>!S.found.has(i) && !S.burned.has(i)); }
+function zoneCounts(){
+  const c = Object.fromEntries(ZONES.map(z=>[z.id,0]));
+  remaining().forEach(i=>{ c[K().goals[i].zone]++; });
+  return c;
+}
+function renderZones(){
+  if(HC()) return;
+  const c = zoneCounts();
+  $('zones').innerHTML = ZONES.map(z=>`<button class="zone ${z.id===S.zone?'on':''} ${c[z.id]?'':'empty'}" data-z="${z.id}">${z.th}<span class="c">${c[z.id]}</span></button>`).join('');
+  $('zones').querySelectorAll('.zone').forEach(b=>b.onclick=()=>{ if(S.busy) return; S.zone=b.dataset.z; S.camOverride=null; if(S.varOn>=0){ S.varOn=-1; clearVarPin(); hideReplay(); renderItems(); } renderZones(); renderCheer(); moveCam(); });
+}
+function renderHud(){
+  const k = K();
+  setPhoto($('hudFace'), k.keeper.code); $('hudFace').parentElement.style.background = k.color;
+  $('hudName').textContent = k.keeper.name;
+  if(HC()){
+    const n = hcTriesMax(), used = S.hcTry||0;
+    $('hudSub').textContent = `💀 ยิงเข้า ${S.totalGoals}${S.hcStreak>1?` · ติดกัน ${S.hcStreak} 🔥`:''} · ลูกนี้เหลือ ${n-used} ครั้ง${used<HC_SPIN_WITHIN?` · เข้าตอนนี้ได้หมุน 🎡`:''}`;
+    $('hudScore').textContent = S.score.toLocaleString();
+    $('hudBalls').innerHTML = Array.from({length:n},(_,i)=>`<i class="${i<used?'s':''}"></i>`).join('');
+    return;
+  }
+  $('hudSub').textContent = `${HC()?'💀 ':''}ด่าน ${S.level+1}/${ORDER.length} · ต้องเข้า ${needFor(S.level)} · ${S.continues?`🔄 แก้ตัวได้ ${S.continues} ครั้ง`:'ไม่มีแก้ตัวแล้ว'}`;
+  $('hudScore').textContent = S.score.toLocaleString();
+  $('hudBalls').innerHTML = Array.from({length:shotsFor()},(_,i)=>`<i class="${S.shots[i]===true?'g':S.shots[i]===false?'s':''}"></i>`).join('');
+}
+
+/* ===== HARDCORE: ลูกเป้าหมายทีละลูก ===== */
+const FOOT_TH = { RightFoot:'เท้าขวา', LeftFoot:'เท้าซ้าย', Header:'โหม่ง', OtherBodyPart:'ส่วนอื่นของร่างกาย' };
+const XG_EST = { pen:.76, six:.45, boxC:.18, boxL:.08, boxR:.08, edge:.05, long:.03 };
+const ORIGIN_EST = { pen:[11,0], six:[4.5,0], boxL:[12,-14], boxC:[12,0], boxR:[12,14], edge:[20,0], long:[28,0] };
+function xgOf(g){ return g.xg ?? XG_EST[g.zone] ?? 0.1; }
+function originOf(g){ return (g.dx!=null && g.lat!=null) ? [g.dx, g.lat] : ORIGIN_EST[g.zone] || [16,0]; }
+function nextTarget(){
+  S.cur = S.queue.find(i=>!S.found.has(i) && !S.burned.has(i)) ?? -1;
+  renderHcInfo();
+}
+function renderHcInfo(){
+  if(!HC()) return;
+  const g = K().goals[S.cur]; if(!g){ $('hcInfo').innerHTML=''; return; }
+  const [dx,lat] = originOf(g); const yd = Math.round(Math.hypot(dx,lat)*1.094);
+  const chips = [
+    `🏟️ ${esc(g.opponent||'?')}`,
+    g.foot ? `🦶 ${FOOT_TH[g.foot]||g.foot}` : null,
+    `⚡ ${SITU_TH[g.situation]||g.situation||'—'}`,
+    (g.minute?`⏱️ นาที ${g.minute}'`:null) + (g.gw?` · GW${g.gw}`:''),
+    `📏 ${yd} หลา`,
+    `📊 xG ${xgOf(g).toFixed(2)}`,
+  ].filter(Boolean);
+  $('hcInfo').innerHTML = `<b>ลูกที่ ${S.totalGoals+1}</b> <span class="pill" style="background:#ffd23f">🧤 vs ${esc(K().keeper.name)}</span> ${chips.map(c=>`<span class="pill">${c}</span>`).join('')}`;
+}
+/* ===== ตัวช่วย ===== */
+function renderItems(){
+  $('btnCheer').innerHTML = S.cheerOn ? '📣 กองเชียร์กำลังตะโกน…' : `📣 กองเชียร์หลังประตู <span class="c">${S.items.cheer}</span>`;
+  $('btnCheer').disabled = S.cheerOn || S.items.cheer<=0;
+  $('btnBoots').innerHTML = S.bootsOn ? '👟 ใส่รองเท้าทองคำแล้ว!' : `👟 รองเท้าทองคำ <span class="c">${S.items.boots}</span>`;
+  $('btnBoots').disabled = S.bootsOn || S.items.boots<=0;
+  $('btnBoots').classList.toggle('on', S.bootsOn); $('btnCheer').classList.toggle('on', S.cheerOn);
+  $('btnVar').innerHTML = S.varOn>=0 ? '📺 กำลังดูรีเพลย์…' : `📺 VAR <span class="c">${S.items.var}</span>`;
+  $('btnVar').disabled = S.varOn>=0 || S.items.var<=0 || (HC() ? S.cur<0 : remaining().length===0);
+  $('btnVar').classList.toggle('on', S.varOn>=0);
+}
+$('btnCheer').onclick = ()=>{
+  if(S.busy || S.cheerOn || S.items.cheer<=0) return;
+  S.items.cheer--; S.cheerOn = true; renderItems(); renderCheer(); sfx('cheer',0.5);
+};
+$('btnBoots').onclick = ()=>{
+  if(S.busy || S.bootsOn || S.items.boots<=0) return;
+  S.items.boots--; S.bootsOn = true; renderItems();
+  setHint('👟 รองเท้าทองคำ: ลูกถัดไปกรอบที่นับว่าเข้าใหญ่ขึ้น 50%');
+};
+// 📣 กองเชียร์หลังประตู: บอกแค่ซ้าย / กลาง / ขวา (ใช้ได้ 1 ลูก)
+function renderCheer(){
+  const L = $('tapeLayer'); L.innerHTML = '';
+  if(!S.cheerOn) return;
+  const cols = [0,0,0];
+  if(HC()){ const g = K().goals[S.cur]; if(g) cols[Math.min(2,Math.floor(g.gx*3))] = 1; }
+  else remaining().forEach(i=>{ const g=K().goals[i]; if(g.zone===S.zone) cols[Math.min(2,Math.floor(g.gx*3))]++; });
+  const max = Math.max(...cols); const w = (GX1-GX0)/3;
+  const names = ['ซ้าย','กลาง','ขวา'];
+  cols.forEach((n,c)=>{
+    const op = max ? 0.1 + 0.5*(n/max) : 0;
+    L.insertAdjacentHTML('beforeend', `<rect x="${GX0+c*w}" y="${GBAR}" width="${w}" height="${GGROUND-GBAR}" fill="${n?'#ffd23f':'#000'}" opacity="${n?op:0.28}"/>`);
+    if(n===max && n>0) L.insertAdjacentHTML('beforeend', `<text x="${GX0+c*w+w/2}" y="${GBAR-14}" text-anchor="middle" font-size="30">📣📣📣</text>`);
+  });
+  const hot = cols.map((n,i)=>n===max&&n>0?names[i]:null).filter(Boolean);
+  setHint(max ? `📣 กองเชียร์หลังประตูตะโกน: "${hot.join(' / ')}!"` : '📣 กองเชียร์เงียบ… โกลไม่เคยเสียจากจุดนี้');
+}
+
+/* ===== 📺 VAR ===== */
+function addMissMark(x,y){ const m=$('missMarks'); if(!m) return; m.insertAdjacentHTML('beforeend',`<g transform="translate(${x},${y})" opacity=".85"><circle r="11" fill="#ff4f5e" stroke="#16142b" stroke-width="3"/><path d="M-5 -5 L5 5 M5 -5 L-5 5" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g>`); }
+function clearVarPin(){ const v = $('varPin'); if(v) v.remove(); }
+function showVarGlow(g){
+  clearVarPin();
+  const p = g2svg(g.gx, g.gy);
+  // วงกว้าง ~1 ม. รอบจุดจริง (เลื่อนสุ่มเล็กน้อย จุดจริงยังอยู่ในวง)
+  const rx = 0.85/GOAL_W*(GX1-GX0), ry = 0.85/GOAL_H*(GGROUND-GBAR);
+  const ox = (Math.random()-.5)*rx*0.6, oy = (Math.random()-.5)*ry*0.6;
+  const el = document.createElementNS(NS,'g'); el.id='varPin';
+  el.setAttribute('transform',`translate(${p.x+ox},${p.y+oy})`);
+  el.innerHTML = `<ellipse rx="${rx}" ry="${ry}" fill="#ffd23f" opacity=".35"><animate attributeName="opacity" values=".2;.5;.2" dur="1s" repeatCount="indefinite"/></ellipse>
+    <ellipse rx="${rx}" ry="${ry}" fill="none" stroke="#ffd23f" stroke-width="4" stroke-dasharray="10 6"/>
+    <rect x="-26" y="${-ry-24}" width="52" height="20" rx="6" fill="#16142b"/><text y="${-ry-9}" text-anchor="middle" font-size="13" font-weight="800" fill="#ffd23f" font-family="Kanit, sans-serif">VAR</text>`;
+  $('pins').appendChild(el);
+}
+function showVarPin(g){
+  clearVarPin();
+  const p = g2svg(g.gx, g.gy);
+  const el = document.createElementNS(NS,'g'); el.id = 'varPin';
+  el.setAttribute('transform',`translate(${p.x},${p.y})`);
+  const id='vc'+Math.random().toString(36).slice(2);
+  el.innerHTML = `<circle r="26" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="6 5"><animate attributeName="r" values="22;30;22" dur="1.2s" repeatCount="indefinite"/></circle>
+    <clipPath id="${id}"><circle r="15"/></clipPath><circle r="18" fill="#9aa6c4" stroke="#16142b" stroke-width="3"/>
+    <g clip-path="url(#${id})" opacity=".85"><circle r="15" fill="#cfd6e6"/><image x="-16" y="-15" width="32" height="41" preserveAspectRatio="xMidYMin slice"/></g>
+    <rect x="-24" y="-44" width="48" height="20" rx="6" fill="#16142b"/><text y="-29" text-anchor="middle" font-size="13" font-weight="800" fill="#ffd23f" font-family="Kanit, sans-serif">VAR</text>`;
+  $('pins').appendChild(el);
+  setPhoto(el.querySelector('image'), g.shooterCode);
+}
+$('btnVar').onclick = ()=>{
+  if(S.busy || S.varOn>=0 || S.items.var<=0) return;
+  const k = K(); let gi;
+  if(HC()) gi = S.cur;
+  else { const rem = remaining(); const inZone = rem.filter(i=>k.goals[i].zone===S.zone); const pool = inZone.length ? inZone : rem; gi = pool[Math.floor(Math.random()*pool.length)]; }
+  if(gi==null || gi<0) return;
+  const g = k.goals[gi];
+  S.items.var--; S.varOn = gi;
+  if(!HC()){ S.zone = g.zone; S.camOverride = originOf(g); renderZones(); }
+  renderItems(); renderCheer(); sfx('whistle',0.6);
+  setHint(`📺 VAR รีเพลย์: ลูกของ ${g.shooter} · ดูทิศลูกในจอ แล้วเดาต่อว่าเข้าตรงไหน`);
+  moveCam().then(()=> playReplay(g));
+};
+$('tvAgain').onclick = ()=>{ if(S.varOn>=0 && !S.busy) playReplay(K().goals[S.varOn]); };
+let replayTok = 0;
+async function playReplay(g){
+  const tok = ++replayTok;
+  const tv = $('tv'), sv = $('tvSvg'), nz = $('tvNoise');
+  const c = CAM;
+  const wt = `translate(${400+c.x},${200+c.y}) skewY(${c.skew}) scale(${c.sx*c.s},${c.s}) translate(-400,-200)`;
+  const tp = g2svg(g.gx, g.gy), T = w2s(tp.x, tp.y), S0 = ballStart();
+  const cx = (S0.x+T.x)/2, cy = Math.min(S0.y,T.y)-60, CUT = 0.6;
+  const at = p => ({ x:(1-p)*(1-p)*S0.x+2*(1-p)*p*cx+p*p*T.x, y:(1-p)*(1-p)*S0.y+2*(1-p)*p*cy+p*p*T.y });
+  sv.innerHTML = `<rect width="800" height="520" fill="#26407a"/><rect y="200" width="800" height="320" fill="#3fae5a"/>
+    <g transform="${wt}"><rect x="150" y="120" width="500" height="170" fill="#0b1430" fill-opacity=".45"/><rect x="150" y="120" width="500" height="170" fill="url(#net)"/>
+      <path d="M150 291 L150 120 L650 120 L650 291" fill="none" stroke="#16142b" stroke-width="22" stroke-linejoin="round"/><path d="M150 291 L150 120 L650 120 L650 291" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/>
+      <path d="M-400 290 L1200 290" stroke="#fff" stroke-width="4"/></g>
+    <path id="tvTrail" fill="none" stroke="#ffd23f" stroke-width="9" stroke-dasharray="6 14" stroke-linecap="round"/>
+    <g id="tvBall"><image href="ball.png" x="-22" y="-22" width="44" height="44"/></g>`;
+  nz.classList.remove('on'); tv.classList.remove('hidden');
+  const ball = $('tvBall'), trail = $('tvTrail');
+  await wait(350);
+  await tween(1800, p=>{
+    if(tok!==replayTok) return;
+    const q = p*CUT, b = at(q), r = 22-(22-9*c.s)*q;
+    ball.setAttribute('transform',`translate(${b.x},${b.y}) scale(${r/22}) rotate(${q*540})`);
+    let d = `M${S0.x} ${S0.y}`; for(let i=1;i<=24;i++){ const pt = at(q*i/24); d += ` L${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`; }
+    trail.setAttribute('d', d);
+  });
+  if(tok!==replayTok) return;
+  nz.classList.add('on'); sfx('groan',0.3);
+}
+function hideReplay(){ replayTok++; $('tv').classList.add('hidden'); $('tvNoise').classList.remove('on'); }
+
+/* ================= DRAWING ================= */
+const NS = 'http://www.w3.org/2000/svg';
+function drawKeeper(k){
+  const g = $('keeper');
+  const c = k.color || '#d7263d', c2 = k.color2 || '#fff';
+  g.innerHTML = `
+   <ellipse cx="0" cy="4" rx="46" ry="9" fill="#000" opacity=".25"/>
+   <g id="kBody">
+    <path d="M-22 -40 L-28 0 L-10 0 L-4 -36 L4 -36 L10 0 L28 0 L22 -40Z" fill="#16142b"/>
+    <rect x="-30" y="-6" width="22" height="10" rx="5" fill="#fff" stroke="#16142b" stroke-width="3"/>
+    <rect x="8" y="-6" width="22" height="10" rx="5" fill="#fff" stroke="#16142b" stroke-width="3"/>
+    <path d="M-34 -84 Q0 -96 34 -84 L30 -38 L-30 -38Z" fill="${c}" stroke="#16142b" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-10 -86 L0 -72 L10 -86" fill="none" stroke="${c2}" stroke-width="4"/>
+    <text x="0" y="-48" text-anchor="middle" font-size="20" font-weight="800" font-family="Kanit" fill="${c2}" stroke="#16142b" stroke-width="1">1</text>
+    <g id="armL" transform="rotate(0,-32,-80)"><path d="M-32 -80 L-62 -112" stroke="${c}" stroke-width="16" stroke-linecap="round"/>
+      <circle cx="-66" cy="-118" r="13" fill="#ffd23f" stroke="#16142b" stroke-width="4"/></g>
+    <g id="armR" transform="rotate(0,32,-80)"><path d="M32 -80 L62 -112" stroke="${c}" stroke-width="16" stroke-linecap="round"/>
+      <circle cx="66" cy="-118" r="13" fill="#ffd23f" stroke="#16142b" stroke-width="4"/></g>
+    <g id="kHeadG" transform="translate(0,-124)">
+      <circle r="40" fill="${c}" stroke="#16142b" stroke-width="5"/>
+      <g clip-path="url(#headClip)"><circle r="36" fill="#cfd6e6"/><image id="kHead" x="-40" y="-40" width="80" height="102" preserveAspectRatio="xMidYMin slice"/></g>
+    </g>
+    <g id="kBubble" opacity="0" transform="translate(58,-170)">
+      <rect x="-26" y="-24" width="52" height="40" rx="14" fill="#fff" stroke="#16142b" stroke-width="3"/>
+      <path d="M-12 14 L-20 28 L-2 14" fill="#fff" stroke="#16142b" stroke-width="3" stroke-linejoin="round"/>
+      <text id="kBubbleT" x="0" y="6" text-anchor="middle" font-size="24"></text>
+    </g>
+   </g>`;
+  setPhoto($('kHead'), k.keeper.code);
+  setKeeper(400, GGROUND, 0);
+}
+function setKeeper(x,y,rot,scale=1){ $('keeper').setAttribute('transform',`translate(${x},${y}) rotate(${rot}) scale(${scale})`); }
+function setArms(deg){ const l=$('armL'), r=$('armR'); if(l){ l.setAttribute('transform',`rotate(${-deg},-32,-80)`); r.setAttribute('transform',`rotate(${deg},32,-80)`); } }
+function setHead(rot,dy=0){ const h=$('kHeadG'); if(h) h.setAttribute('transform',`translate(0,${-124+dy}) rotate(${rot})`); }
+function bubble(txt){ const b=$('kBubble'); if(!b) return; $('kBubbleT').textContent = txt; b.setAttribute('opacity', txt?1:0); }
+
+// ท่ายืนรอ: โยกตัว ขยับแขนเบา ๆ
+let idleOn = true;
+(function idle(t){
+  if(idleOn && !S.busy){
+    const b = $('kBody');
+    if(b){ b.setAttribute('transform',`translate(${Math.sin(t/520)*6},${Math.abs(Math.sin(t/260))*-4})`); setArms(Math.sin(t/260)*8); }
+  }
+  requestAnimationFrame(idle);
+})(0);
+
+// ท่าดีใจ (เซฟได้) / ท่าเซ็ง (เสียประตู)
+async function react(type, fromX, fromY, fromRot){
+  idleOn = false;
+  const b = $('kBody'); if(b) b.setAttribute('transform','');
+  // ลุกกลับมากลางประตู
+  await tween(type==='sad'?650:380, p=>{ const q=ease(p); setKeeper(fromX+(400-fromX)*q, fromY+(GGROUND-fromY)*q, fromRot*(1-q)); });
+  if(type==='happy'){
+    bubble(['💪','😤','🧤','🚫'][Math.floor(Math.random()*4)]);
+    sfx('cheer',0.35);
+    await tween(700, p=>{ setKeeper(400, GGROUND - Math.abs(Math.sin(p*Math.PI*2))*34, 0); setArms(-35 - Math.sin(p*Math.PI*4)*15); });
+    setArms(0);
+  }else{
+    bubble(['😩','🤦','😭','💢'][Math.floor(Math.random()*4)]);
+    await tween(750, p=>{ setHead(Math.sin(p*Math.PI*3)*14, 10*Math.min(1,p*3)); setArms(70*Math.min(1,p*2)); });
+  }
+  await wait(250);
+  bubble(''); setHead(0,0); setArms(0); setKeeper(400,GGROUND,0);
+  idleOn = true;
+}
+
+function setBall(x,y,r,rot=0){ $('ball').setAttribute('transform',`translate(${x},${y}) scale(${r/22})`); const sp=$('ballSpin'); if(sp) sp.setAttribute('transform',`rotate(${rot})`); }
+function zoneObj(){ return ZONES.find(z=>z.id===S.zone); }
+function resetBall(){ const b = ballStart(); setBall(b.x, b.y, b.r); }
+function clearPins(){ $('pins').innerHTML=''; const m=$('missMarks'); if(m) m.innerHTML=''; }
+function g2svg(gx,gy){ return { x: GX0 + gx*(GX1-GX0), y: GGROUND - gy*(GGROUND-GBAR) }; }
+function svg2g(x,y){ return { gx:(x-GX0)/(GX1-GX0), gy:(GGROUND-y)/(GGROUND-GBAR) }; }
+function addPin(goal){
+  const p = g2svg(goal.gx, goal.gy);
+  const g = document.createElementNS(NS,'g');
+  g.setAttribute('transform',`translate(${p.x},${p.y})`);
+  const id = 'pc'+Math.random().toString(36).slice(2);
+  g.innerHTML = `<clipPath id="${id}"><circle r="15"/></clipPath><circle r="18" fill="#3ddc84" stroke="#16142b" stroke-width="3"/>
+    <g clip-path="url(#${id})"><circle r="15" fill="#cfd6e6"/><image x="-16" y="-15" width="32" height="41" preserveAspectRatio="xMidYMin slice"/></g>`;
+  $('pins').appendChild(g);
+  setPhoto(g.querySelector('image'), goal.shooterCode);
+}
+function tween(ms, fn){ return new Promise(res=>{ const t0=performance.now(); const step=t=>{ const p=Math.min(1,(t-t0)/ms); fn(p); p<1?requestAnimationFrame(step):res(); }; requestAnimationFrame(step); }); }
+const ease = p => 1-Math.pow(1-p,3);
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+function toast(txt, cls){ const t=$('toast'); t.textContent=txt; t.className='toast on '+(cls||''); setTimeout(()=>t.className='toast',900); }
+function setHint(t){ $('hint').textContent = t; }
+
+/* ================= SHOOTING ================= */
+svg.addEventListener('pointerdown', e=>{
+  if(S.busy || !$('modal').classList.contains('hidden')) return;
+  const pt = svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+  const p = pt.matrixTransform($('world').getScreenCTM().inverse());
+  if(p.y > GGROUND + 40) return;
+  shoot(p.x, Math.min(p.y, GGROUND-4));
+});
+
+/* ===== กล้อง: มองจากจุดยิง (ไกล = ประตูเล็ก, ใกล้ = ใหญ่, ข้าง = เห็นประตูเฉียง) ===== */
+const CAM = { s:1, sx:1, skew:0, x:0, y:0 };
+function camFor(dx, lat){
+  const ang = Math.atan2(lat, Math.max(dx,1));
+  return { s: Math.max(0.6, Math.min(1.3, 1.385 - 0.035*dx)), sx: Math.pow(Math.cos(ang), 0.5),
+           skew: 0, x: -Math.sin(ang)*190, y: dx>20 ? -10 : 0 };
+}
+function applyCam(c){
+  $('world').setAttribute('transform', `translate(${400+c.x},${200+c.y}) skewY(${c.skew}) scale(${c.sx*c.s},${c.s}) translate(-400,-200)`);
+}
+function currentOrigin(){
+  if(S.camOverride) return S.camOverride;
+  if(HC()){ const g = K().goals[S.cur]; if(g) return originOf(g); }
+  return ORIGIN_EST[S.zone] || [12,0];
+}
+let camTw = 0;
+async function moveCam(instant){
+  const t = camFor(...currentOrigin()); const f = {...CAM}; const my = ++camTw;
+  if(instant){ Object.assign(CAM,t); applyCam(CAM); resetBall(); return; }
+  await tween(380, p=>{ if(my!==camTw) return; const q=ease(p); for(const k in t) CAM[k] = f[k]+(t[k]-f[k])*q; applyCam(CAM); resetBall(); });
+}
+// แปลงพิกัดในโลก (ประตู) → พิกัดบนจอ (บอลวาดบนจอ จะได้กลมเสมอ)
+function w2s(x,y){
+  const c = CAM; const u = (x-400)*c.sx*c.s; const v = (y-200)*c.s + Math.tan(c.skew*Math.PI/180)*u;
+  return { x: u + 400 + c.x, y: v + 200 + c.y };
+}
+function ballStart(){
+  // เท้าคนยิงอยู่ตรงกลางล่างของจอเสมอ
+  return { x:400, y:478, r:22 };
+}
+
+async function shoot(tx, ty){
+  S.busy = true;
+  const k = K();
+  const {gx, gy} = svg2g(tx, ty);
+  const inFrame = gx>=0 && gx<=1 && gy>=0 && gy<=1;
+  const boots = S.bootsOn ? BOOTS_MULT : 1;
+  let best=-1, bestD=1e9, radius;
+  if(HC()){
+    best = S.cur; const g = k.goals[best];
+    bestD = Math.hypot((g.gx-gx)*GOAL_W, (g.gy-gy)*GOAL_H);
+    radius = (HC_RADIUS_BASE + HC_RADIUS_XG * xgOf(g)) * boots;
+  }else{
+    remaining().forEach(i=>{
+      const g = k.goals[i]; if(g.zone!==S.zone) return;
+      const d = Math.hypot((g.gx-gx)*GOAL_W, (g.gy-gy)*GOAL_H);
+      if(d<bestD){bestD=d;best=i;}
+    });
+    radius = HIT_RADIUS_M * boots;
+  }
+  const isGoal = inFrame && best>=0 && bestD<=radius;
+  const aim = $('aim'); aim.setAttribute('transform',`translate(${tx},${ty})`); aim.setAttribute('opacity',1);
+  clearVarPin(); hideReplay(); S.varOn = -1; S.camOverride = null;
+
+  const side = tx < 400 ? -1 : 1;
+  const diveSide = isGoal ? (Math.abs(tx-400)<60 ? (Math.random()<.5?-1:1) : -side) : side;
+  const kx = isGoal ? 400 + diveSide*150 : Math.max(GX0+40, Math.min(GX1-40, tx));
+  const ky = isGoal ? GGROUND-10 : Math.min(GGROUND, ty + 120);
+  const krot = diveSide * (isGoal ? 75 : Math.min(85, 20 + Math.abs(tx-400)/3));
+
+  sfx('kick'); buzz(15);
+  const st = ballStart(); const T = w2s(tx,ty);
+  const sx=st.x, sy=st.y, cx=(sx+T.x)/2, cy=Math.min(sy,T.y)-60;
+  const body = $('kBody'); if(body) body.setAttribute('transform','');
+  await tween(480, p=>{
+    const bx=(1-p)*(1-p)*sx+2*(1-p)*p*cx+p*p*T.x, by=(1-p)*(1-p)*sy+2*(1-p)*p*cy+p*p*T.y;
+    setBall(bx,by,st.r-(st.r-9*CAM.s)*p, p*540);
+    const kp = Math.min(1, p*1.25);
+    setKeeper(400+(kx-400)*ease(kp), GGROUND+(ky-GGROUND)*ease(kp) - Math.sin(kp*Math.PI)*30, krot*ease(kp));
+  });
+  S.bootsOn = false; S.cheerOn = false;
+
+  if(isGoal){
+    S.found.add(best); S.shots.push(true); S.totalGoals++;
+    const g = k.goals[best];
+    if(HC()){ S.hcTry++; S.hcStreak++; S.hcBest = Math.max(S.hcBest, S.hcStreak); }
+    const points = HC()
+      ? 100 + Math.round((1-xgOf(g))*200) + Math.min(S.hcStreak-1, 10)*20 + (hcTriesMax()-S.hcTry)*30
+      : 100 + (S.level+1)*10 + Math.round((1-(g.xgot??0.5))*100);
+    S.score += points;
+    S.scored.push({ shooter:g.shooter, code:g.shooterCode, keeper:k.keeper.name, keeperCode:k.keeper.code, xgot:g.xgot, gw:g.gw });
+    sfx('net'); sfx('cheer',0.9); buzz([30,40,60]);
+    const net=$('netRect'); await tween(300,p=>net.setAttribute('transform',`translate(0,${Math.sin(p*Math.PI*4)*4*(1-p)})`));
+    toast('GOAL!');
+    addPin(g);
+    await react('sad', kx, ky, krot);
+    await revealGoal(g, points);
+  }else{
+    S.shots.push(false);
+    if(HC()){ S.hcTry++; }
+    if(!inFrame){ sfx('groan',0.8); toast('ออก!','save'); setHint('ออกนอกกรอบ เสียไป 1 ลูก'); await react('happy', kx, ky, krot); }
+    else {
+      sfx('save'); buzz(40);
+      await tween(350,p=>setBall(T.x+side*p*160*CAM.s, T.y+p*p*120*CAM.s, 9*CAM.s));
+      toast('SAVE!','save'); sfx('groan',0.6);
+      await react('happy', Math.max(GX0+40, Math.min(GX1-40, tx)), ky, krot);
+    }
+    if(HC()){
+      const g = k.goals[best];
+      addMissMark(tx, ty);
+      if(S.hcTry >= hcTriesMax()){
+        // ครบ 5 ครั้ง: เฉลยลูกจริงแล้วจบเกม
+        showVarPin(g); S.hcStreak = 0;
+        setHint(`❌ ครบ ${hcTriesMax()} ครั้งแล้ว · ลูกจริง ${g.shooter} เข้าตรงนี้`);
+        renderHud(); await wait(1800);
+      }else{
+        // บอกทางแบบเกมเรือรบ: ซ้าย/ขวา/สูง/ต่ำ + ใกล้/ไกล
+        const dxm = (g.gx-gx)*GOAL_W, dym = (g.gy-gy)*GOAL_H, dist = Math.hypot(dxm,dym);
+        const hor = Math.abs(dxm) < radius*0.5 ? '' : (dxm>0 ? '➡️ ขวากว่านี้' : '⬅️ ซ้ายกว่านี้');
+        const ver = Math.abs(dym) < radius*0.5 ? '' : (dym>0 ? '⬆️ สูงกว่านี้' : '⬇️ ต่ำกว่านี้');
+        const heat = !inFrame ? '🚫 ออกนอกกรอบ' : dist<=radius*1.6 ? '🔥 เฉียดมาก!' : dist<=radius*3 ? '🌡️ อุ่น ๆ' : '🧊 ยังไกล';
+        setHint(`${heat} · ${[hor,ver].filter(Boolean).join(' ') || 'เกือบแล้ว'} · เหลือ ${hcTriesMax()-S.hcTry} ครั้ง`);
+      }
+    }else if(!inFrame){
+      /* hint ตั้งไว้แล้ว */
+    }else if(best<0){
+      setHint(`${k.keeper.name} ไม่เคยเสียประตูจาก${zoneObj().th}เลย ลองจุดอื่น`);
+    }else{
+      setHint(bestD<=NEAR_RADIUS_M ? '🔥 เฉียดแล้ว! มีลูกเคยเข้าแถวนี้' : `🧤 มุมนี้เซฟได้ ลองมุมอื่น${S.items.var>0?' · หรือกด 📺 VAR':''}`);
+    }
+  }
+  aim.setAttribute('opacity',0);
+  resetBall();
+  renderHud(); renderZones(); renderItems(); renderCheer();
+  S.busy = false;
+  checkLevelEnd();
+}
+
+function revealGoal(g, pts){
+  const k = K();
+  return new Promise(res=>{
+    modal(`
+      <span class="reveal-tag">เฉลย · มุมนี้ใครเคยยิงเข้า</span>
+      <div class="vs">
+        <div class="reveal-face"><img id="mShooter" alt=""></div>
+        <b>vs</b>
+        <div class="reveal-face k" style="background:${k.color}"><img id="mKeeper" alt=""></div>
+      </div>
+      <div class="likeline">คุณยิงเหมือน</div>
+      <h2>${esc(g.shooter)} <span style="color:#c0283a">vs</span> ${esc(k.keeper.name)}</h2>
+      <div class="meta">${g.opponent?`${esc(g.opponent)} · `:''}${g.gw?`GW${g.gw}`:''}${g.minute?` · นาที ${g.minute}'`:''}</div>
+      <div><span class="pill">${ZONES.find(z=>z.id===g.zone)?.th||''}</span>${g.situation==='Penalty'?'':`<span class="pill">${SITU_TH[g.situation]||g.situation||'—'}</span>`}${g.foot?`<span class="pill">${FOOT_TH[g.foot]||g.foot}</span>`:''}<span class="pill">xG ${xgOf(g).toFixed(2)}</span>${g.xgot!=null?`<span class="pill x">xGOT ${g.xgot.toFixed(2)}</span>`:''}</div>
+      <div class="meta" style="margin-top:10px">+${pts} แต้ม${(HC()?xgOf(g)<0.1:(g.xgot!=null && g.xgot<0.3))?' · 🎯 โบนัสลูกยาก':''}</div>
+      <button class="btn" id="mGo">ยิงต่อ</button>`);
+    setPhoto($('mShooter'), g.shooterCode); setPhoto($('mKeeper'), k.keeper.code);
+    $('mGo').onclick = ()=>{ closeModal(); res(); };
+  });
+}
+
+function checkLevelEnd(){
+  if(HC()){
+    const lastGoal = S.shots[S.shots.length-1] === true;
+    if(lastGoal){
+      if(S.hcTry <= HC_SPIN_WITHIN) return spinWheel(()=>{ closeModal(); hcNext(); });
+      return hcNext();
+    }
+    if(S.hcTry >= hcTriesMax()) return gameOver(false);
+    return;   // ยังยิงลูกเดิมต่อ
+  }
+  const need = needFor(S.level);
+  const goals = S.shots.filter(Boolean).length;
+  const left = shotsFor() - S.shots.length;
+  const outOfTargets = HC() ? S.cur < 0 : remaining().length === 0;
+  if(left>0 && !outOfTargets){
+    if(goals < need && goals + left >= need) return setHint(`${$('hint').textContent.startsWith('📺')?$('hint').textContent+' · ':''}เหลือ ${left} ลูก · ต้องเข้าอีก ${need-goals}`);
+    if(goals >= need) return;
+  }
+  const pass = goals >= need;
+  if(pass) S.score += 200;
+  S.history.push({ lv:S.level+1, team:K().teamShort||K().team, keeper:K().keeper.name, goals, pass });
+  levelSummary(pass, goals);
+}
+
+function goalMapSvg(k){
+  const dots = k.goals.map((g,i)=>{ const p=g2svg(g.gx,g.gy);
+    const col = S.found.has(i)?'#3ddc84': S.burned.has(i)?'#9aa6c4':'#ff4f5e';
+    return `<circle cx="${p.x}" cy="${p.y}" r="11" fill="${col}" stroke="#16142b" stroke-width="3" opacity=".92"/>`; }).join('');
+  return `<svg class="mini-goal" viewBox="130 100 540 200"><rect x="150" y="120" width="500" height="167" fill="#2d3f70"/><rect x="150" y="120" width="500" height="167" fill="url(#net)"/>${dots}
+    <path d="M150 287 L150 120 L650 120 L650 287" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round"/><path d="M130 289 L670 289" stroke="#16142b" stroke-width="4"/></svg>`;
+}
+function topShooters(k){
+  const m={}; k.goals.forEach(g=>m[g.shooter]=(m[g.shooter]||0)+1);
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([n,c])=>`<span>${esc(n)} ×${c}</span>`).join('');
+}
+
+function levelSummary(pass, goals){
+  const k = K(); const last = S.level === ORDER.length-1;
+  const canContinue = !pass && S.continues > 0;
+  const canSpin = goals >= WHEEL_MIN_GOALS && !last;
+  if(pass) sfx('cheer',0.7); else sfx('whistle',0.8);
+  modal(`
+    <span class="reveal-tag">${pass?(last?'🏆 ชนะบอสแล้ว!':'ผ่านด่าน!'):(canContinue?'ไม่ผ่าน':'จบเกม')}</span>
+    <h2 style="margin-top:10px">${pass?`ยิงผ่าน ${esc(k.keeper.name)} ได้ ${goals}/${shotsFor()}`:`${esc(k.keeper.name)} หยุดคุณไว้ได้`}</h2>
+    <div class="meta">จุดอ่อนของ ${esc(k.keeper.name)} · <span style="color:#1a9e55">●</span> คุณยิงเข้า · <span style="color:#d8344a">●</span> ยังไม่เจอ · <span style="color:#8a93ad">●</span> ดู VAR แล้ว</div>
+    ${goalMapSvg(k)}
+    <div class="meta" style="margin:0">ยิงเข้าใส่บ่อยสุด</div>
+    <div class="shooters">${topShooters(k)}</div>
+    <div class="btnrow">
+    ${pass && !last ? (canSpin ? `<button class="btn red" id="mSpin">🎡 หมุนวงล้อ!</button>` : `<button class="btn red" id="mGo">ด่านต่อไป →</button>`) :
+      canContinue ? `<button class="btn red" id="mCont">🔄 แก้ตัว ยิงด่านนี้ใหม่</button><button class="btn ghost" id="mGo">ยอมแพ้</button>` :
+      `<button class="btn red" id="mGo">ดูคะแนน</button>`}
+    </div>`);
+  const next = ()=>{ closeModal(); S.level++; S.attempt = 0; showLevelIntro(); };
+  if($('mSpin')) $('mSpin').onclick = ()=> spinWheel(next);
+  if($('mCont')) $('mCont').onclick = ()=>{ closeModal(); S.continues--; S.attempt++; showLevelIntro(); };
+  if($('mGo')) $('mGo').onclick = ()=>{
+    if(pass && !last) return next();
+    closeModal(); gameOver(pass && last);
+  };
+}
+
+/* ===== 🎡 วงล้อ (ยิงเข้า 3 ลูกขึ้นไปในด่าน) ===== */
+const WHEEL = [
+  { id:'boots',  label:'👟 รองเท้าทองคำ', short:'👟',   color:'#ffd23f' },
+  { id:'cheer',  label:'📣 กองเชียร์',     short:'📣',   color:'#3ddc84' },
+  { id:'var',    label:'📺 VAR',          short:'📺',   color:'#7fb2ff' },
+  { id:'shot',   label:'⚽ ลูกพิเศษ +1',   short:'⚽+1', color:'#ff4f5e' },
+  { id:'cheer2', label:'📣 กองเชียร์ ×2',  short:'📣×2', color:'#3ddc84' },
+  { id:'pts300', label:'💰 +300 แต้ม',    short:'+300', color:'#b48cff' },
+];
+function wheelSvg(){
+  const n = WHEEL.length, R = 140, seg = 360/n;
+  const parts = WHEEL.map((w,i)=>{
+    const a0 = (i*seg-90)*Math.PI/180, a1 = ((i+1)*seg-90)*Math.PI/180;
+    const x0=R*Math.cos(a0), y0=R*Math.sin(a0), x1=R*Math.cos(a1), y1=R*Math.sin(a1);
+    const am = ((i+.5)*seg);
+    return `<path d="M0 0 L${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1}Z" fill="${w.color}" stroke="#16142b" stroke-width="4"/>
+      <text transform="rotate(${am}) translate(0,-92)" text-anchor="middle" font-size="26" font-weight="800" font-family="Kanit, sans-serif" fill="#16142b">${w.short}</text>`;
+  }).join('');
+  return `<svg viewBox="-160 -175 320 335" style="width:280px;max-width:100%">
+    <g id="wheelG" style="transition:transform 3.2s cubic-bezier(.12,.75,.15,1)">${parts}<circle r="22" fill="#fff8e7" stroke="#16142b" stroke-width="5"/></g>
+    <path id="wheelPtr" style="transform-origin:0px -160px;transform-box:view-box;transition:transform .07s" d="M-16 -168 L16 -168 L0 -136Z" fill="#ff4f5e" stroke="#16142b" stroke-width="4" stroke-linejoin="round"/></svg>`;
+}
+function spinWheel(done){
+  modal(`<span class="reveal-tag">🎡 หมุนวงล้อตัวช่วย</span><div style="margin:12px 0 4px">${wheelSvg()}</div>
+    <div class="meta" id="wRes">${HC()?`ยิงเข้าครบ ${S.totalGoals} ลูกแล้ว!`:`ยิงเข้า ${WHEEL_MIN_GOALS} ลูกขึ้นไป ได้หมุน 1 ครั้ง`}</div>
+    <div class="btnrow"><button class="btn red" id="wGo">หมุน!</button></div>`);
+  $('wGo').onclick = ()=>{
+    $('wGo').disabled = true;
+    const i = Math.floor(Math.random()*WHEEL.length), seg = 360/WHEEL.length;
+    const deg = 360*6 - (i+.5)*seg + (Math.random()-.5)*seg*0.6;
+    requestAnimationFrame(()=>{ $('wheelG').style.transform = `rotate(${deg}deg)`; });
+    // เสียง "แต๊ก" ทุกครั้งที่เส้นแบ่งช่องผ่านเข็ม + เข็มสะบัด
+    const t0 = performance.now(); let lastSeg = 0;
+    const ptr = $('wheelPtr');
+    (function tick(){
+      const g = $('wheelG'); if(!g) return;
+      const m = new DOMMatrixReadOnly(getComputedStyle(g).transform);
+      let a = Math.atan2(m.b, m.a)*180/Math.PI; if(a<0) a+=360;
+      const turns = (window.__wTurns ||= {prev:0,total:0});
+      let d = a - turns.prev; if(d < -180) d += 360; turns.total += Math.max(0,d); turns.prev = a;
+      const segNow = Math.floor(turns.total / seg);
+      if(segNow > lastSeg){ lastSeg = segNow; sfx('spin', 0.7);
+        if(ptr){ ptr.style.transform='rotate(-18deg)'; setTimeout(()=>ptr.style.transform='', 70); } }
+      if(performance.now() - t0 < 3300) requestAnimationFrame(tick); else window.__wTurns = null;
+    })();
+    setTimeout(()=>{
+      const w = WHEEL[i];
+      if(w.id==='boots') S.items.boots++;
+      if(w.id==='cheer') S.items.cheer++;
+      if(w.id==='cheer2') S.items.cheer += 2;
+      if(w.id==='shot'){ if(HC()) S.hcExtra++; else S.extraShots = (S.extraShots||0) + 1; }
+      if(w.id==='var') S.items.var++;
+      if(w.id==='pts150') S.score += 150;
+      if(w.id==='pts300') S.score += 300;
+      sfx('prize'); buzz([20,30,20]);
+      $('wRes').innerHTML = `ได้ <b style="font-size:20px;color:#16142b">${w.label}</b>`;
+      $('wGo').outerHTML = `<button class="btn red" id="wNext">${HC()?'ยิงต่อ →':'ด่านต่อไป →'}</button>`;
+      $('wNext').onclick = done;
+    }, 3300);
+  };
+}
+
+/* ===== "คุณยิงเหมือนใคร" ===== */
+function likeSummary(){
+  const m = {};
+  S.scored.forEach(s=>{ (m[s.shooter] ||= {n:0, code:s.code, vs:[]}); m[s.shooter].n++; m[s.shooter].vs.push(s.keeper); });
+  const arr = Object.entries(m).map(([name,v])=>({name,...v})).sort((a,b)=>b.n-a.n);
+  return arr;
+}
+
+async function gameOver(won){
+  crowd(false);
+  const reached = HC() ? 1 : (won ? ORDER.length : S.level+1);
+  const likes = likeSummary(); const top = likes[0];
+  const stopper = won ? null : K();
+  const entry = { name:S.name, score:S.score, level:reached, goals:S.totalGoals, season: DATA.season||'', daily:S.daily, like: top?top.name:'', mode:S.mode };
+  modal(`
+    <span class="reveal-tag">${won?'🏆 BEAT THE 20!':'GAME OVER'}</span>
+    <h2 style="margin-top:12px;font-size:40px">${S.score.toLocaleString()}</h2>
+    <div class="meta">${esc(S.name)} · ${HC()?`💀 Hardcore · ยิงเข้า ${S.totalGoals} ลูก`:`ผ่าน ${S.history.filter(h=>h.pass).length} นายด่าน · ยิงเข้า ${S.totalGoals} ลูก`}</div>
+    ${top?`<div class="meta">สไตล์การยิงของคุณ: <b>${esc(top.name)}</b> (ยิงเหมือน ${top.n} ลูก)</div>`:''}
+    <div class="meta" id="mStatus">กำลังบันทึกลง leaderboard…</div>
+    <img id="sharePreview" class="share-preview hidden" alt="การ์ดผลการเล่น">
+    <div class="btnrow">
+      <button class="btn red" id="mShare">📤 แชร์ผล</button>
+      <button class="btn" id="mAgain">เล่นอีกรอบ</button>
+      <button class="btn ghost" id="mHome">หน้าแรก</button>
+    </div>`);
+  $('mAgain').onclick = ()=>{ closeModal(); startRun(S.mode); };
+  $('mHome').onclick = ()=>{ closeModal(); goHome(true); };
+  $('mShare').onclick = ()=> shareResult(won, reached, stopper, likes);
+  makeCard(won, reached, stopper, likes).then(c=>{ if(c){ try{ $('sharePreview').src = c.toDataURL('image/png'); $('sharePreview').classList.remove('hidden'); }catch(e){} } });
+  const ok = await lbSubmit(entry);
+  const st = $('mStatus'); if(st) st.textContent = ok ? 'บันทึกลง leaderboard แล้ว ✅' : (SAMPLE_MODE?'โหมดตัวอย่าง: บันทึกไว้ในเครื่องนี้':'บันทึกไว้ในเครื่องนี้ (leaderboard ออนไลน์ยังไม่พร้อม)');
+}
+
+/* ================= SHARE CARD (1080×1350) ================= */
+function loadImgCORS(code){
+  return new Promise(res=>{
+    const urls = photoUrls(code); let i=0;
+    if(!urls.length) return res(null);
+    const img = new Image(); img.crossOrigin = 'anonymous';
+    img.onload = ()=>res(img);
+    img.onerror = ()=>{ i++; if(i<urls.length) img.src = urls[i]; else res(null); };
+    img.src = urls[0];
+  });
+}
+const INK = '#16142b', YEL = '#ffd23f', RED = '#ff4f5e', GRN = '#3ddc84', PAPER = '#fff8e7';
+const F = (w,px) => `${w} ${px}px Kanit, sans-serif`;
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function canvasOK(c){ try{ c.getContext('2d').getImageData(0,0,1,1); return true; }catch(e){ return false; } }
+function fit(ctx, txt, weight, max, maxW){ let px=max; do{ ctx.font=F(weight,px); px-=2; }while(ctx.measureText(txt).width>maxW && px>16); return px+2; }
+// ข้อความแบบสติกเกอร์: ขอบหนา + เงาทึบด้านล่าง
+function sticker(ctx, txt, x, y, fill, lw=14, shadow=8){
+  ctx.lineJoin='round'; ctx.lineWidth=lw; ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.strokeText(txt,x,y+shadow); ctx.fillText(txt,x,y+shadow);
+  ctx.strokeText(txt,x,y); ctx.fillStyle=fill; ctx.fillText(txt,x,y);
+}
+// ป้ายชื่อทรงแคปซูล
+function tag(ctx, txt, cx, cy, {bg=INK, fg='#fff', px=40, weight=800, rot=0, padX=30, maxW=520}={}){
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot);
+  px = fit(ctx, txt, weight, px, maxW-padX*2);
+  const w = Math.min(maxW, ctx.measureText(txt).width + padX*2), h = px*1.55;
+  rr(ctx,-w/2+5,-h/2+7,w,h,h/2); ctx.fillStyle=INK; ctx.fill();
+  rr(ctx,-w/2,-h/2,w,h,h/2); ctx.fillStyle=bg; ctx.fill(); ctx.lineWidth=5; ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=fg; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(txt,0,px*0.06);
+  ctx.restore(); ctx.textBaseline='alphabetic';
+}
+function hueOf(s){ return hashStr(String(s))%360; }
+function initials(n){ const p=String(n).replace(/[^A-Za-zÀ-ÿ฀-๿ ]/g,'').trim().split(/\s+/); return (p.length>1? p[0][0]+p[p.length-1][0] : String(n).slice(0,2)).toUpperCase(); }
+// หน้านักเตะในวงกลม (ถ้าโหลดรูปไม่ได้ = อวตารตัวย่อชื่อสีสด)
+async function face(ctx, {code, name, cx, cy, r, ring, withPhoto}){
+  ctx.beginPath(); ctx.arc(cx+6,cy+12,r+10,0,Math.PI*2); ctx.fillStyle=INK; ctx.fill();         // เงา
+  ctx.beginPath(); ctx.arc(cx,cy,r+16,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill(); ctx.lineWidth=7; ctx.strokeStyle=INK; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,r+9,0,Math.PI*2); ctx.fillStyle=ring; ctx.fill();
+  ctx.lineWidth=7; ctx.strokeStyle=INK; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
+  const img = withPhoto ? await loadImgCORS(code) : null;
+  if(img){
+    const g=ctx.createRadialGradient(cx,cy-r*.3,r*.1,cx,cy,r); g.addColorStop(0,'#e9eefb'); g.addColorStop(1,'#aab6d6');
+    ctx.fillStyle=g; ctx.fillRect(cx-r,cy-r,r*2,r*2);
+    const w=r*2.15, h=w*140/110; ctx.drawImage(img, cx-w/2, cy-r*0.92, w, h);
+  }else{
+    const h=hueOf(name); const g=ctx.createLinearGradient(cx-r,cy-r,cx+r,cy+r);
+    g.addColorStop(0,`hsl(${h},80%,62%)`); g.addColorStop(1,`hsl(${(h+40)%360},75%,45%)`);
+    ctx.fillStyle=g; ctx.fillRect(cx-r,cy-r,r*2,r*2);
+    ctx.fillStyle='rgba(255,255,255,.18)'; ctx.beginPath(); ctx.arc(cx-r*.35,cy-r*.45,r*.55,0,Math.PI*2); ctx.fill();
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font=F(800, r*0.8);
+    ctx.lineWidth=r*0.09; ctx.strokeStyle=INK; ctx.lineJoin='round'; const t=initials(name);
+    ctx.strokeText(t,cx,cy+r*0.06); ctx.fillStyle='#fff'; ctx.fillText(t,cx,cy+r*0.06); ctx.textBaseline='alphabetic';
+  }
+  ctx.restore();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.lineWidth=7; ctx.strokeStyle=INK; ctx.stroke();
+}
+function burst(ctx, cx, cy, r, spikes, fill){
+  ctx.beginPath();
+  for(let i=0;i<spikes*2;i++){ const a=i*Math.PI/spikes - Math.PI/2; const rr_= i%2? r*0.68 : r; ctx.lineTo(cx+Math.cos(a)*rr_, cy+Math.sin(a)*rr_); }
+  ctx.closePath(); ctx.fillStyle=fill; ctx.fill(); ctx.lineWidth=7; ctx.strokeStyle=INK; ctx.lineJoin='round'; ctx.stroke();
+}
+function ballIcon(ctx,cx,cy,r){
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill(); ctx.lineWidth=r*0.16; ctx.strokeStyle=INK; ctx.stroke();
+  ctx.beginPath(); for(let i=0;i<5;i++){ const a=-Math.PI/2+i*2*Math.PI/5; ctx.lineTo(cx+Math.cos(a)*r*.38, cy+Math.sin(a)*r*.38); } ctx.closePath(); ctx.fillStyle=INK; ctx.fill();
+}
+function gloveIcon(ctx,cx,cy,s){
+  ctx.save(); ctx.translate(cx,cy); ctx.lineWidth=s*0.12; ctx.strokeStyle=INK; ctx.fillStyle=YEL; ctx.lineJoin='round';
+  rr(ctx,-s*.42,-s*.5,s*.84,s*.95,s*.3); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(-s*.5,s*.02,s*.17,s*.3,-0.5,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-s*.12,-s*.5); ctx.lineTo(-s*.12,-s*.1); ctx.moveTo(s*.14,-s*.5); ctx.lineTo(s*.14,-s*.1); ctx.stroke();
+  ctx.restore();
+}
+function crown(ctx,cx,cy,s){
+  ctx.beginPath(); ctx.moveTo(cx-s,cy+s*.5); ctx.lineTo(cx-s,cy-s*.4); ctx.lineTo(cx-s*.5,cy); ctx.lineTo(cx,cy-s*.7); ctx.lineTo(cx+s*.5,cy); ctx.lineTo(cx+s,cy-s*.4); ctx.lineTo(cx+s,cy+s*.5); ctx.closePath();
+  ctx.fillStyle=YEL; ctx.fill(); ctx.lineWidth=5; ctx.strokeStyle=INK; ctx.lineJoin='round'; ctx.stroke();
+}
+
+async function makeCard(won, reached, stopper, likes){
+  try{ await Promise.all([document.fonts.load(F(800,80)), document.fonts.load(F(600,40)), document.fonts.load(F(400,30)), document.fonts.load(F(800,80),'ก')]); }catch(e){}
+  const build = async (withPhoto)=>{
+    const W=1080, H=1350;
+    const c = document.createElement('canvas'); c.width=W; c.height=H;
+    const ctx = c.getContext('2d');
+
+    // ---- ฉากสนามกลางคืน ----
+    let g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#0c1530'); g.addColorStop(.55,'#243c78'); g.addColorStop(1,'#0c1530');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // อัฒจันทร์
+    for(let y=230;y<560;y+=30) for(let x=((y/30)%2)*17;x<W;x+=34){ ctx.beginPath(); ctx.arc(x,y,12,0,Math.PI*2); ctx.fillStyle=`rgba(120,150,220,${0.10+0.10*((x*7+y)%3)/2})`; ctx.fill(); }
+    // ไฟสนาม
+    ctx.save(); ctx.globalCompositeOperation='lighter';
+    [[-80,0,420,900],[1160,0,660,900]].forEach(([x1,y1,x2,y2])=>{ const lg=ctx.createLinearGradient(x1,y1,x2,y2); lg.addColorStop(0,'rgba(255,240,190,.20)'); lg.addColorStop(1,'rgba(255,240,190,0)');
+      ctx.fillStyle=lg; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2-200,y2); ctx.lineTo(x2+200,y2); ctx.closePath(); ctx.fill(); });
+    ctx.restore();
+    // หญ้า
+    const py=930; for(let i=0;i<8;i++){ ctx.fillStyle = i%2? '#3fae5a':'#47bd63'; const y0=py+i*i*7.5, y1=py+(i+1)*(i+1)*7.5; ctx.fillRect(0,y0,W,y1-y0); }
+    ctx.fillStyle='#47bd63'; ctx.fillRect(0,py+64*7.5,W,H);
+    ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=6; ctx.beginPath(); ctx.moveTo(0,py+4); ctx.lineTo(W,py+4); ctx.stroke();
+    ctx.lineWidth=7; ctx.strokeStyle=INK; ctx.beginPath(); ctx.moveTo(0,py); ctx.lineTo(W,py); ctx.stroke();
+
+    // ---- โลโก้ ----
+    ctx.textAlign='center';
+    ctx.save(); ctx.translate(540,140); ctx.rotate(-0.035);
+    ctx.font=F(800,128); sticker(ctx,'BEAT THE 20',0,0,YEL,18,10);
+    ctx.restore();
+    tag(ctx, `${HC()?'💀 HARDCORE · ':'ผลการเล่น · '}${thaiDate(S.daily||todayBKK())}`, 540, 218, {bg:HC()?RED:INK, fg:HC()?'#fff':YEL, px:30, weight:600});
+
+    // ---- HERO: คุณยิงเหมือน ----
+    const top = likes[0];
+    const kp = top ? ORDER.find(k=>k.keeper.name===top.vs[top.vs.length-1]) : stopper || ORDER[0];
+    if(top){
+      tag(ctx,'คุณยิงเหมือน…',540,300,{bg:'#fff',fg:INK,px:40,weight:800,rot:-0.04});
+      await face(ctx,{code:top.code,name:top.name,cx:385,cy:520,r:160,ring:YEL,withPhoto});
+      await face(ctx,{code:kp?.keeper.code,name:kp?.keeper.name||'GK',cx:800,cy:575,r:96,ring:kp?.color||RED,withPhoto});
+      burst(ctx,615,470,78,12,RED);
+      ctx.font=F(800,54); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.lineWidth=10; ctx.strokeStyle=INK; ctx.lineJoin='round';
+      ctx.strokeText('VS',615,474); ctx.fillStyle='#fff'; ctx.fillText('VS',615,474); ctx.textBaseline='alphabetic';
+      tag(ctx, top.name.toUpperCase(), 385, 722, {bg:YEL, fg:INK, px:62, weight:800, rot:-0.03, maxW:560});
+      tag(ctx, kp?.keeper.name||'', 800, 705, {bg:'#fff', fg:INK, px:36, weight:800, rot:0.04, maxW:330});
+      if(top.n>1) tag(ctx, `ยิงเหมือน ${top.n} ลูก`, 200, 395, {bg:GRN,fg:INK,px:28,weight:800,rot:-0.12});
+    }else{
+      tag(ctx,'ยิงไม่เข้าสักลูก…',540,300,{bg:'#fff',fg:INK,px:40,weight:800,rot:-0.04});
+      await face(ctx,{code:kp?.keeper.code,name:kp?.keeper.name||'GK',cx:540,cy:520,r:160,ring:kp?.color||RED,withPhoto});
+      gloveIcon(ctx,720,410,90);
+      tag(ctx, `${kp?.keeper.name||''} ปิดประตูใส่!`, 540, 735, {bg:YEL,fg:INK,px:54,weight:800,rot:-0.03,maxW:700});
+    }
+
+    // ---- คะแนน ----
+    ctx.save(); ctx.translate(540,852); ctx.rotate(0.015);
+    rr(ctx,-405,-62+9,810,124,30); ctx.fillStyle=INK; ctx.fill();
+    rr(ctx,-405,-62,810,124,30); ctx.fillStyle=PAPER; ctx.fill(); ctx.lineWidth=7; ctx.strokeStyle=INK; ctx.stroke();
+    ctx.textAlign='left'; ctx.fillStyle='#5b6280'; ctx.font=F(400,28); ctx.fillText(S.name.slice(0,16), -370, -12);
+    ctx.fillStyle=INK; ctx.font=F(800,34);
+    const passed = S.history.filter(h=>h.pass).length;
+    ctx.fillText(HC()?`💀 ยิงเข้า ${S.totalGoals} ลูก`:(won?'🏆 ผ่านครบ 20!':`ผ่าน ${passed} นายด่าน`), -370, 34);
+    ctx.textAlign='right'; ctx.font=F(800,92); ctx.fillStyle=RED; ctx.lineWidth=8; ctx.strokeStyle=INK; ctx.lineJoin='round';
+    const sc=S.score.toLocaleString(); ctx.strokeText(sc,330,32); ctx.fillText(sc,330,32);
+    ctx.font=F(600,26); ctx.fillStyle=INK; ctx.fillText('แต้ม',385,32);
+    ctx.restore();
+
+    if(HC()){
+      ctx.textAlign='center';
+      tag(ctx, `💀 Hardcore · ยิงเข้า ${S.totalGoals} ลูกก่อนพลาดครบ ${HC_TRIES} ครั้ง`, 540, 985, {bg:INK, fg:'#fff', px:30, weight:600, maxW:760});
+      const n = Math.min(S.totalGoals, 20), r=40, gap=101, x0=540-gap*4.5;
+      for(let i=0;i<20;i++){ const x=x0+(i%10)*gap, y=[1080,1196][Math.floor(i/10)];
+        ctx.beginPath(); ctx.arc(x+3,y+6,r,0,Math.PI*2); ctx.fillStyle=INK; ctx.fill();
+        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fillStyle=i<n?GRN:'rgba(255,255,255,.35)'; ctx.fill(); ctx.lineWidth=5; ctx.strokeStyle=INK; ctx.stroke();
+        if(i<n) ballIcon(ctx,x,y,20); }
+      if(S.totalGoals>20) tag(ctx, `+${S.totalGoals-20}`, 1000, 1196, {bg:YEL, fg:INK, px:30, weight:800});
+    }else{
+    // ---- เส้นทาง 20 นายด่าน (บนสนามหญ้า) ----
+    ctx.textAlign='center';
+    tag(ctx, won?'เส้นทางแชมป์':`โดน ${stopper?.keeper.name||''} หยุดที่ด่าน ${reached}`, 540, 985, {bg:INK, fg:'#fff', px:30, weight:600, maxW:760});
+    const r=40, gap=101, x0=540-gap*4.5, rows=[1080,1196];
+    ctx.setLineDash([10,12]); ctx.lineWidth=6; ctx.strokeStyle='rgba(22,20,43,.55)';
+    rows.forEach(y=>{ ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x0+gap*9,y); ctx.stroke(); });
+    ctx.setLineDash([]);
+    for(let i=0;i<ORDER.length;i++){
+      const x = x0 + (i%10)*gap, y = rows[Math.floor(i/10)];
+      const hs = S.history.filter(h=>h.lv===i+1); const h = hs[hs.length-1];
+      ctx.beginPath(); ctx.arc(x+3,y+6,r,0,Math.PI*2); ctx.fillStyle=INK; ctx.fill();
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle = h ? (h.pass ? GRN : RED) : 'rgba(255,255,255,.35)'; ctx.fill();
+      ctx.lineWidth=5; ctx.strokeStyle=INK; ctx.stroke();
+      if(h && h.pass){ ballIcon(ctx,x,y-6,17); ctx.font=F(800,22); ctx.fillStyle=INK; ctx.fillText(`×${h.goals}`,x,y+33); }
+      else if(h){ gloveIcon(ctx,x,y,42); }
+      else { ctx.font=F(800,30); ctx.fillStyle='rgba(22,20,43,.55)'; ctx.fillText(String(i+1),x,y+11); }
+      if(i===ORDER.length-1) crown(ctx,x,y-r-6,20);
+    }
+    }
+    // footer
+    tag(ctx, `เล่นได้ที่ ${location.host || 'beat-the-20'}`, 540, 1295, {bg:YEL, fg:INK, px:30, weight:800});
+    return c;
+  };
+  try{
+    let c = await build(true);
+    if(!canvasOK(c)) c = await build(false);   // รูปจาก PL ไม่เปิด CORS → ใช้อวตารตัวย่อแทน
+    return c;
+  }catch(e){ console.error(e); return null; }
+}
+function shareText(won, reached){
+  const tiles = ORDER.map((_,i)=>{ const hs=S.history.filter(h=>h.lv===i+1); const h=hs[hs.length-1]; return h?(h.pass?'🟩':'🟥'):'⬛'; });
+  const rows = [tiles.slice(0,10).join(''), tiles.slice(10).join('')].join('\n');
+  const top = likeSummary()[0];
+  return `BEAT THE 20${HC()?' 💀 HARDCORE':''} · ${thaiDate(S.daily)}\n${won?'🏆 ผ่านครบ 20!':`ไปถึงด่าน ${reached}/20`} · ${S.score.toLocaleString()} แต้ม\n${top?`คุณยิงเหมือน ${top.name} vs ${top.vs[top.vs.length-1]}\n`:''}${rows}\n${location.href.split('?')[0]}`;
+}
+async function shareResult(won, reached, stopper, likes){
+  const text = shareText(won, reached);
+  const c = await makeCard(won, reached, stopper, likes);
+  let blob = null;
+  if(c){ try{ blob = await new Promise(r=>c.toBlob(r,'image/png')); }catch(e){} }
+  const file = blob ? new File([blob],'beat-the-20.png',{type:'image/png'}) : null;
+  try{
+    if(file && navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], text}); return; }
+    if(navigator.share){ await navigator.share({text}); return; }
+  }catch(e){ if(e && e.name==='AbortError') return; }
+  // fallback: ดาวน์โหลดรูป + คัดลอกข้อความ
+  if(blob){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='beat-the-20.png'; a.click(); }
+  try{ await navigator.clipboard.writeText(text); }catch(e){}
+  const st = $('mStatus'); if(st) st.textContent = 'ดาวน์โหลดรูปการ์ดแล้ว และคัดลอกข้อความไว้ให้แล้ว ✅';
+}
+
+function goHome(showLb){
+  crowd(false);
+  $('screenGame').classList.add('hidden'); $('screenStart').classList.remove('hidden');
+  refreshDailyBtn();
+  if(showLb) document.querySelector(`.tab[data-tab="${S.mode==='hc'?'hc':'daily'}"]`).click();
+}
+
+/* ================= MODAL ================= */
+function modal(html){ $('modalCard').innerHTML = html; $('modal').classList.remove('hidden'); }
+function closeModal(){ $('modal').classList.add('hidden'); }
+
+/* ================= INIT ================= */
+(async function(){
+  $('nameInput').value = lsGet('bt20_name','') || '';
+  muted = lsGet('bt20_muted', false);
+  $('btnMute').textContent = muted ? '🔇' : '🔊';
+  $('btnMute').onclick = ()=>{ muted=!muted; lsSet('bt20_muted',muted); $('btnMute').textContent = muted?'🔇':'🔊'; crowd(!muted); };
+  initSfx();
+  await loadData();
+  renderLadder(); refreshDailyBtn();
+  $('btnStart').onclick = ()=>startRun('normal');
+  $('btnHc').onclick = ()=>startRun('hc');
+  document.addEventListener('keydown', e=>{ if(e.key==='Enter' && !$('screenStart').classList.contains('hidden')) startRun(); });
+})();
+</script>
+</body>
+</html>
