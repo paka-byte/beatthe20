@@ -96,6 +96,10 @@ table.lb td.n{text-align:right;font-weight:800}
 .item{background:#2b2f4d;color:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px 12px;font-weight:600;font-size:14px;box-shadow:0 3px 0 var(--ink);display:flex;align-items:center;gap:6px}
 .item .c{background:var(--yellow);color:var(--ink);border-radius:8px;padding:0 7px;font-size:12px;font-weight:800}
 .item.on{background:var(--yellow);color:var(--ink)}
+.helplist{text-align:left;margin:10px 0 14px;display:grid;gap:8px}
+.helplist div{display:flex;gap:10px;align-items:flex-start;background:#efe6cf;border:2px solid var(--ink);border-radius:12px;padding:8px 10px;font-size:14px;line-height:1.45}
+.helplist div b{display:block;font-size:15px}
+.helplist .ic{font-size:26px;line-height:1;flex:none;width:32px;text-align:center}
 .hcinfo{margin:10px 0 0;padding:8px 10px;text-align:center;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);font-size:14px;line-height:1.9}
 .hcinfo b{margin-right:4px}
 .scout{color:var(--muted);font-size:12px;text-align:center}
@@ -218,6 +222,7 @@ table.lb td.n{text-align:right;font-weight:800}
       <button class="item" id="btnCheer"></button>
       <button class="item" id="btnBoots"></button>
       <button class="item" id="btnVar">📺 VAR</button>
+      <button class="item" id="btnHelp" style="background:#fff;color:var(--ink)">❓ ตัวช่วยคืออะไร</button>
     </div>
   </section>
 
@@ -471,7 +476,7 @@ function showLevelIntro(){
     <div class="meta">${`มี ${shotsFor()} ลูก${S.levelExtra?` (รวม ⚽ ลูกพิเศษ +${S.levelExtra})`:''}`} · ต้องเข้าอย่างน้อย <b>${need}</b> ลูก<br>ยิงเข้า 3 ลูกขึ้นไป ได้หมุนวงล้อ 🎡</div>
     <button class="btn red" id="mGo">ลุย!</button>`);
   setPhoto($('mImg'), k.keeper.code);
-  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); };
+  $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); if(!lsGet('bt20_help_seen',false)) showHelp(); };
 }
 
 function remaining(){ return [...S.pool].filter(i=>!S.found.has(i) && !S.burned.has(i)); }
@@ -537,6 +542,23 @@ function renderItems(){
   $('btnVar').disabled = S.varOn>=0 || S.items.var<=0 || (HC() ? S.cur<0 : remaining().length===0);
   $('btnVar').classList.toggle('on', S.varOn>=0);
 }
+/* ===== ❓ คำอธิบายตัวช่วย ===== */
+function showHelp(onClose){
+  const rows = [
+    ['📣','กองเชียร์หลังประตู','ใช้ก่อนยิง กองเชียร์จะตะโกนบอกว่าลูกไปทาง <b style="display:inline">ซ้าย / กลาง / ขวา</b> ฝั่งนั้นของประตูจะสว่างขึ้น ใช้ได้ 1 ลูก'],
+    ['👟','รองเท้าทองคำ','ใช้ก่อนยิง กรอบที่นับว่าเข้าจะใหญ่ขึ้น 50% ยิงไม่ต้องเป๊ะมาก ใช้ได้ 1 ลูก'],
+    ['📺','VAR รีเพลย์','ใช้ก่อนยิง เกมจะย้ายไปยืนตรงจุดที่ลูกจริงถูกยิง แล้วเปิดจอเล่นทางลูกแบบช้า ๆ ภาพตัดก่อนลูกถึงประตู ดูทิศแล้วเดาต่อว่าเข้าตรงไหน กด ↻ ดูซ้ำได้'],
+    ['🎡','วงล้อตัวช่วย', HC() ? 'ยิงเข้าภายใน 3 ครั้งแรกของลูกนั้น ได้หมุน 1 ครั้ง' : 'ยิงเข้า 3 ลูกขึ้นไปในด่าน ได้หมุน 1 ครั้ง'],
+    ['⚽','ลูกพิเศษ +1','ได้จากวงล้อ ' + (HC() ? 'ลูกถัดไปยิงได้ 6 ครั้งแทน 5' : 'ด่านถัดไปได้ยิง 6 ลูกแทน 5')],
+    ...(HC() ? [['🧭','บอกทาง (ฟรี)','ยิงพลาดทุกครั้ง เกมจะบอกว่าต้องขยับ ซ้าย/ขวา/สูง/ต่ำ และเฉียดแค่ไหน 🔥 เฉียดมาก · 🌡️ อุ่น ๆ · 🧊 ยังไกล']]
+            : [['🔄','แก้ตัว','ไม่ผ่านด่าน ยิงด่านเดิมใหม่ได้ 1 ครั้งต่อเกม'], ['🔢','ตัวเลขบนปุ่มจุดยิง','บอกว่าโกลคนนี้เสียประตูจากจุดนั้นกี่ลูกที่คุณยังไม่เจอ เลข 0 = ยิงจากตรงนั้นยังไงก็ไม่เข้า']]),
+  ];
+  modal(`<span class="reveal-tag">❓ ตัวช่วย</span>
+    <div class="helplist">${rows.map(([ic,t,d])=>`<div><span class="ic">${ic}</span><span><b>${t}</b>${d}</span></div>`).join('')}</div>
+    <button class="btn red" id="mHelpOk">เข้าใจแล้ว</button>`);
+  $('mHelpOk').onclick = ()=>{ closeModal(); lsSet('bt20_help_seen', true); onClose && onClose(); };
+}
+$('btnHelp').onclick = ()=>{ if(!S.busy) showHelp(); };
 $('btnCheer').onclick = ()=>{
   if(S.busy || S.cheerOn || S.items.cheer<=0) return;
   S.items.cheer--; S.cheerOn = true; renderItems(); renderCheer(); sfx('cheer',0.5);
