@@ -975,7 +975,7 @@ const WHEEL = [
   { id:'cheer',  label:'📣 กองเชียร์',     short:'📣',   color:'#3ddc84' },
   { id:'var',    label:'📺 VAR',          short:'📺',   color:'#7fb2ff' },
   { id:'shot',   label:'⚽ ลูกพิเศษ +1',   short:'⚽+1', color:'#ff4f5e' },
-  { id:'cheer2', label:'📣 กองเชียร์ ×2',  short:'📣×2', color:'#3ddc84' },
+  { id:'pts150', label:'💰 +150 แต้ม',    short:'+150', color:'#3ddc84' },
   { id:'pts300', label:'💰 +300 แต้ม',    short:'+300', color:'#b48cff' },
 ];
 function wheelSvg(){
@@ -1018,7 +1018,6 @@ function spinWheel(done){
       const w = WHEEL[i];
       if(w.id==='boots') S.items.boots++;
       if(w.id==='cheer') S.items.cheer++;
-      if(w.id==='cheer2') S.items.cheer += 2;
       if(w.id==='shot'){ if(HC()) S.hcExtra++; else S.extraShots = (S.extraShots||0) + 1; }
       if(w.id==='var') S.items.var++;
       if(w.id==='pts150') S.score += 150;
