@@ -384,8 +384,8 @@ async function renderLb(board){
   const t = $('lbTable');
   t.innerHTML = '<tr><td>กำลังโหลด…</td></tr>';
   const {list, online} = await lbFetch(board);
-  const rows = list.slice(0,30).map((e,i)=>`<tr><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(e.name)}${e.like?`<br><small style="color:#8a8f9e">ยิงเหมือน ${esc(e.like)}</small>`:''}</td><td>${board==='hc'?`${e.goals} ลูก`:`ด่าน ${e.level}`}</td><td class="n">${e.score.toLocaleString()}</td></tr>`).join('');
-  const title = board==='all' ? 'ตลอดกาล' : board==='hc' ? '💀 Hardcore ตลอดกาล' : `วันนี้ · ${thaiDate(board.slice(6))}`;
+  const rows = list.slice(0,10).map((e,i)=>`<tr><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(e.name)}${e.like?`<br><small style="color:#8a8f9e">ยิงเหมือน ${esc(e.like)}</small>`:''}</td><td>${board==='hc'?`${e.goals} ลูก`:`ด่าน ${e.level}`}</td><td class="n">${e.score.toLocaleString()}</td></tr>`).join('');
+  const title = (board==='all' ? 'ตลอดกาล' : board==='hc' ? '💀 Hardcore ตลอดกาล' : `วันนี้ · ${thaiDate(board.slice(6))}`) + ' · TOP 10';
   t.innerHTML = `<tr><th colspan="4" style="text-align:center">${title}</th></tr><tr><th>#</th><th>ชื่อ</th><th>${board==='hc'?'ยิงเข้า':'ไปถึง'}</th><th style="text-align:right">แต้ม</th></tr>` +
     (rows || '<tr><td colspan="4">ยังไม่มีใครลงชื่อ เป็นคนแรกเลย!</td></tr>') +
     (online ? '' : '<tr><td colspan="4" style="color:#8a8f9e;font-size:12px">ออฟไลน์: แสดงคะแนนในเครื่องนี้เท่านั้น</td></tr>');
