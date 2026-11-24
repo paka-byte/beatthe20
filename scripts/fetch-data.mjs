@@ -27,6 +27,7 @@ const OUT = path.join(ROOT, "data", "keepers.json");
 // ถ้า FotMob บล็อกการดึงจาก Node: ให้ดึงผ่านเบราว์เซอร์ด้วย scripts/fotmob-in-browser.js แล้ววางไฟล์ไว้ที่นี่ สคริปต์จะใช้ไฟล์นี้แทน
 const RAW = path.join(ROOT, "data", "fotmob-raw.json");
 let RAWDATA = null;
+const IN_CI = !!process.env.CI;   // บน GitHub Actions: ถ้าดึงสดไม่ได้ให้ล้ม (จะได้รู้) แทนการใช้ไฟล์เก่า
 const UA = { "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36", "accept-language": "en" };
 
 /* ---------------- helpers ---------------- */
@@ -90,8 +91,15 @@ async function loadFpl() {
 
 /* ---------------- 2) FotMob fixtures ---------------- */
 async function loadFixtures() {
-  try { RAWDATA = JSON.parse(await fs.readFile(RAW, "utf8")); } catch {}
-  if (RAWDATA) { console.log(`• ใช้ข้อมูล FotMob จากไฟล์ data/fotmob-raw.json (${RAWDATA.fixtures.length} นัด)`); return RAWDATA.fixtures; }
+  try { return await loadFixturesLive(); }
+  catch (e) {
+    if (IN_CI) throw e;
+    try { RAWDATA = JSON.parse(await fs.readFile(RAW, "utf8")); } catch { throw e; }
+    console.log(`  ⚠ ดึง FotMob ไม่ได้ (${e.message}) → ใช้ไฟล์ data/fotmob-raw.json (${RAWDATA.fixtures.length} นัด)`);
+    return RAWDATA.fixtures;
+  }
+}
+async function loadFixturesLive() {
   console.log("• FotMob fixtures …");
   const q = SEASON ? `&season=${encodeURIComponent(SEASON)}` : "";
   let src = await tryJson(`https://www.fotmob.com/api/data/leagues?id=${LEAGUE_ID}&ccode3=THA${q}`)
