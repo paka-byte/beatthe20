@@ -6,3 +6,27 @@
   for = "/data/*"
   [headers.values]
     Cache-Control = "public, max-age=300"
+
+# ส่งต่อรูปนักเตะจาก PL ผ่านโดเมนเราเอง เพื่อให้วาดลงการ์ดแชร์ (canvas) ได้
+[[redirects]]
+  from = "/plimg/25/:file"
+  to = "https://resources.premierleague.com/premierleague25/photos/players/110x140/:file"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/plimg/26/:file"
+  to = "https://resources.premierleague.com/premierleague26/photos/players/110x140/:file"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/plimg/legacy/:file"
+  to = "https://resources.premierleague.com/premierleague/photos/players/110x140/p:file"
+  status = 200
+  force = true
+
+[[headers]]
+  for = "/plimg/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
