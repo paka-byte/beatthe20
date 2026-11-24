@@ -102,6 +102,12 @@ table.lb td.n{text-align:right;font-weight:800}
 .helplist .ic{font-size:26px;line-height:1;flex:none;width:32px;text-align:center}
 .hcinfo{margin:10px 0 0;padding:8px 10px;text-align:center;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);font-size:14px;line-height:1.9}
 .hcinfo b{margin-right:4px}
+.hcwho{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;text-align:left;line-height:1.15}
+.hcwho small{display:block;color:#6b7190;font-size:11px}
+.hcwho b{font-size:18px;margin:0}
+.hcwho .hcvs{font-weight:800;color:#c0283a}
+.hcface{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);overflow:hidden;background:#cfd6e6;flex:none}
+.hcface img{width:100%;height:122%;object-fit:cover;object-position:top}
 .scout{color:var(--muted);font-size:12px;text-align:center}
 
 .modal{position:fixed;inset:0;background:rgba(8,12,28,.72);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20;overflow:auto}
@@ -152,7 +158,7 @@ table.lb td.n{text-align:right;font-weight:800}
     <div class="card rules">
       <b>กติกา</b> · โกลเรียงจากคนที่เสียเยอะสุดไปหาคนที่เสียน้อยสุด ด่าน 20 คือบอส · ด่านละ <b>5 ลูก</b> · แก้ตัวยิงด่านเดิมใหม่ได้ <b>1 ครั้ง</b><br>
       <b>โหมดปกติ</b> · เลือกจุดยิง แล้วจิ้มมุมในกรอบ ตรงกับมุมที่โกลเคยเสียจากจุดนั้นจริงคือ <b>เข้า</b> · ด่าน 1–15 ต้องเข้า 2 ลูก โซนบอส 16–20 ต้องเข้า 1 ลูก<br>
-      <b>💀 Hardcore</b> · ยิงไม่รู้จบ สุ่มลูกจริงจากโกลทั้ง 20 คน บอกทีม เท้า จังหวะ ระยะ xG ครบ · แต่ละลูกยิงได้ 5 ครั้ง (พลาดแล้วเกมบอกทาง) ไม่เข้าคือจบ · เข้าภายใน 3 ครั้งได้หมุนวงล้อ<br>
+      <b>💀 Hardcore</b> · ยิงไม่รู้จบ สุ่มลูกจริงจากโกลทั้ง 20 คน บอกคนยิง ทีม เท้า จังหวะ ระยะ xG ครบ · แต่ละลูกยิงได้ 5 ครั้ง (พลาดแล้วเกมบอกทาง) ไม่เข้าคือจบ · เข้าภายใน 3 ครั้งได้หมุนวงล้อ<br>
       <b>ตัวช่วย</b> · 📣 กองเชียร์หลังประตู บอกว่าลูกไปทางซ้าย กลาง หรือขวา · 👟 รองเท้าทองคำ กรอบที่นับว่าเข้าใหญ่ขึ้น 50% หนึ่งลูก · 📺 VAR รีเพลย์ ย้ายไปยืนจุดยิงจริง แล้วเปิดจอให้ดูทิศลูกแบบช้า ๆ (ภาพตัดก่อนถึงประตู)<br>
       ยิงเข้า <b>3 ลูกขึ้นไป</b>ในด่าน ได้หมุนวงล้อ 🎡 ลุ้นตัวช่วย ⚽ ลูกพิเศษ (+1 ลูกในด่านถัดไป) หรือแต้ม
     </div>
@@ -434,7 +440,7 @@ function startHc(){
   modal(`
     <span class="reveal-tag">💀 HARDCORE</span>
     <h2 style="margin-top:12px">ยิงไม่รู้จบ</h2>
-    <div class="meta">เกมจะสุ่มลูกที่เคยเข้าจริงจากโกลทั้ง ${ORDER.length} คนมาทีละลูก<br>บอกทีม เท้า จังหวะ ระยะ และ xG ให้ครบ แต่ต้องยิงให้ตรงลูกนั้น</div>
+    <div class="meta">เกมจะสุ่มลูกที่เคยเข้าจริงจากโกลทั้ง ${ORDER.length} คนมาทีละลูก<br>บอกคนยิง ทีม เท้า จังหวะ ระยะ และ xG ให้ครบ แต่ต้องยิงให้ตรงลูกนั้น</div>
     <div class="meta">แต่ละลูกยิงได้ <b>${HC_TRIES} ครั้ง</b> · ไม่เข้าเลยคือจบเกม<br>เข้าภายใน <b>${HC_SPIN_WITHIN} ครั้งแรก</b> ได้หมุนวงล้อ 🎡 · ทุกครั้งที่พลาด เกมจะบอกทางว่าต้องขยับไปทางไหน</div>
     <button class="btn red" id="mGo">ลุย!</button>`);
   $('mGo').onclick = ()=>{ closeModal(); sfx('whistle',0.8); showHelp(); };
@@ -531,7 +537,8 @@ function renderHcInfo(){
     `📏 ${yd} หลา`,
     `📊 xG ${xgOf(g).toFixed(2)}`,
   ].filter(Boolean);
-  $('hcInfo').innerHTML = `<b>ลูกที่ ${S.totalGoals+1}</b> <span class="pill" style="background:#ffd23f">🧤 vs ${esc(K().keeper.name)}</span> ${chips.map(c=>`<span class="pill">${c}</span>`).join('')}`;
+  $('hcInfo').innerHTML = `<div class="hcwho"><span class="hcface"><img id="hcShooterImg" alt=""></span><span><small>ลูกที่ ${S.totalGoals+1} · คนยิง</small><b>${esc(g.shooter)}</b></span><span class="hcvs">vs</span><span><small>โกล</small><b>${esc(K().keeper.name)}</b></span></div>${chips.map(c=>`<span class="pill">${c}</span>`).join('')}`;
+  setPhoto($('hcShooterImg'), g.shooterCode);
 }
 /* ===== ตัวช่วย ===== */
 function renderItems(){
