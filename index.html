@@ -132,6 +132,10 @@ table.lb td.n{text-align:right;font-weight:800}
 .share-preview{width:100%;border:3px solid var(--ink);border-radius:12px;margin:10px 0}
 .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:22px;line-height:1.6}
 </style>
+<!-- Google AdSense (ยืนยันเว็บ + H5 Games Ads) · ลบ data-adbreak-test เมื่อพร้อมเปิดโฆษณาจริง -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6644724280979675"
+     data-ad-client="ca-pub-6644724280979675" data-adbreak-test="on" data-ad-frequency-hint="30s"
+     crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="wrap">
@@ -245,7 +249,7 @@ const needFor = lv => (S.mode==='hc' ? 1 : NEED_PER_LEVEL);
 // เวอร์ชันกติกา: เปลี่ยนเมื่อปรับกติกา → leaderboard เริ่มกระดานใหม่ และหน้าเว็บเก่าส่งคะแนนไม่ได้
 const RULES_VERSION = 'r2';
 // โฆษณาแบบดูแล้วได้รางวัล (Google H5 Games Ads) — ใส่รหัส AdSense เมื่อได้รับอนุมัติ เช่น 'ca-pub-1234567890123456'
-const ADSENSE_CLIENT = '';
+const ADSENSE_CLIENT = 'ca-pub-6644724280979675';
 const ADS_TEST_MODE = true;          // เปิดโหมดทดสอบของ Google ไว้ก่อน (ปิดเมื่อพร้อมใช้จริง)
 const CONTINUES = 1;                 // ชีวิตพิเศษต่อเกม
 const START_ITEMS = { cheer:1, boots:1, var:1 };   // ตัวช่วยตอนเริ่มเกม
@@ -1335,14 +1339,8 @@ function closeModal(){ $('modal').classList.add('hidden'); }
 
 /* ===== โฆษณาแบบดูแล้วได้รางวัล ===== */
 function initAds(){
+  // สคริปต์ AdSense ฝังอยู่ใน <head> แล้ว (ให้ Google ตรวจเจอตอนยืนยันเว็บ) · ตรงนี้แค่ตั้งค่า adBreak
   if(!ADSENSE_CLIENT || !/^https?:/.test(location.protocol)) return;
-  const sc = document.createElement('script');
-  sc.async = true; sc.crossOrigin = 'anonymous';
-  sc.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
-  sc.setAttribute('data-ad-client', ADSENSE_CLIENT);
-  if(ADS_TEST_MODE) sc.setAttribute('data-adbreak-test', 'on');
-  sc.setAttribute('data-ad-frequency-hint', '30s');
-  document.head.appendChild(sc);
   window.adsbygoogle = window.adsbygoogle || [];
   window.adBreak = window.adConfig = function(o){ window.adsbygoogle.push(o); };
   adConfig({ preloadAdBreaks: 'on', sound: muted ? 'off' : 'on' });
